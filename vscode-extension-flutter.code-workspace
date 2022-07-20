@@ -1,0 +1,18 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"[json]": {
+			"editor.defaultFormatter": "vscode.json-language-features",
+			"editor.formatOnSave": true
+		},
+		"editor.tabSize": 4,
+		"typescript.preferences.importModuleSpecifier": "auto",
+		"typescript.suggest.autoImports": true,
+		"editor.insertSpaces": false,
+		"dart.lineLength": 240,
+	}
+}
