@@ -1,8 +1,8 @@
 import * as changeCase from "change-case";
 
 export function getPageTemplate (pageName: string, packagePath: string, blocType: 'bloc' | 'cubit'): string {
-    const pascalCasePageName = changeCase.pascalCase(pageName.toLowerCase());
-    const pascalCaseBlocType = changeCase.pascalCase(blocType.toLowerCase());
+    const pascalCasePageName = changeCase.pascalCase(pageName);
+    const pascalCaseBlocType = changeCase.pascalCase(blocType);
     const snakeCasePageName = changeCase.snakeCase(pageName).toLowerCase();
     const hyphenCasePageName = changeCase.paramCase(pageName.toLowerCase());
     return `import 'package:flutter/material.dart';

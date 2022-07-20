@@ -66,7 +66,7 @@ export async function execute(uri: Uri, type: 'bloc' | 'cubit' | 'domain-data' |
 	const useEquatable = true;
 
 	const pascalCaseFeatureName = changeCase.pascalCase(
-		featureName.toLowerCase()
+		featureName
 	);
 	try {
 		let generators: Generator[] = [];

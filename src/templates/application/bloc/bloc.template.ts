@@ -7,7 +7,7 @@ export function getBlocTemplate (blocName: string, useEquatable: boolean): strin
 }
 
 function getEquatableBlocTemplate (blocName: string) {
-  const pascalCaseBlocName = changeCase.pascalCase(blocName.toLowerCase());
+  const pascalCaseBlocName = changeCase.pascalCase(blocName);
   const snakeCaseBlocName = changeCase.snakeCase(blocName).toLowerCase();
   const blocState = `${pascalCaseBlocName}State`;
   const blocEvent = `${pascalCaseBlocName}Event`;
@@ -34,7 +34,7 @@ class ${pascalCaseBlocName}Bloc extends Bloc<${blocEvent}, ${blocState}> {
 }
 
 function getDefaultBlocTemplate (blocName: string) {
-  const pascalCaseBlocName = changeCase.pascalCase(blocName.toLowerCase());
+  const pascalCaseBlocName = changeCase.pascalCase(blocName);
   const snakeCaseBlocName = changeCase.snakeCase(blocName).toLowerCase();
   const blocState = `${pascalCaseBlocName}State`;
   const blocEvent = `${pascalCaseBlocName}Event`;
