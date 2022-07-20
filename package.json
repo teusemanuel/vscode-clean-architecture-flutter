@@ -80,7 +80,7 @@
 		}
 	},
 	"scripts": {
-		"vscode:prepublish": "yarn version-generate && compile",
+		"vscode:prepublish": "yarn version-generate && yarn compile",
 		"compile": "tsc -p ./",
 		"watch": "tsc -watch -p ./",
 		"pretest": "yarn run compile && yarn run lint",
