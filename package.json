@@ -4,6 +4,11 @@
 	"description": "Add new feature easily with well structured directories (Bloc Architecture pattern)",
 	"version": "1.0.1",
 	"publisher": "Mateus Emanuel Araujo",
+	"repository": {
+		"type": "git",
+		"url": "https://bitbucket.org/synvata/vscode-extension-flutter/src/master/"
+	},
+	"license": "MIT",
 	"engines": {
 		"vscode": "^1.69.0"
 	},
@@ -81,11 +86,11 @@
 		"pretest": "yarn run compile && yarn run lint",
 		"lint": "eslint src --ext ts",
 		"test": "node ./out/test/runTest.js",
-		"build": "vsce package --yarn"
+		"build": "vsce package --yarn",
+		"version-generate": "ts-node version-auto-generate.ts"
 	},
 	"devDependencies": {
 		"@types/change-case": "^2.3.1",
-		"@types/vscode": "^1.69.0",
 		"@types/glob": "^7.2.0",
 		"@types/js-yaml": "^4.0.5",
 		"@types/lodash": "^4.14.182",
@@ -94,15 +99,19 @@
 		"@types/node": "16.x",
 		"@types/rimraf": "^3.0.2",
 		"@types/semver": "^7.3.10",
+		"@types/vscode": "^1.69.0",
 		"@typescript-eslint/eslint-plugin": "^5.30.0",
 		"@typescript-eslint/parser": "^5.30.0",
+		"@vscode/test-electron": "^2.1.5",
 		"cz-conventional-changelog": "^3.3.0",
 		"eslint": "^8.20.0",
+		"fs-extra": "^10.1.0",
+		"git-describe": "^4.1.1",
 		"glob": "^8.0.3",
 		"mocha": "^10.0.0",
-		"vsce": "^2.10.0",
+		"ts-node": "^10.9.1",
 		"typescript": "^4.7.4",
-		"@vscode/test-electron": "^2.1.5",
+		"vsce": "^2.10.0",
 		"vscode-test": "^1.6.1"
 	},
 	"dependencies": {
