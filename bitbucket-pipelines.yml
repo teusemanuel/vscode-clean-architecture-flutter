@@ -12,7 +12,7 @@ pipelines:
             - node
           script:
             - apk update && apk add --no-cache curl git openssh
-            - npm install --global yarn vsce
+            - npm install --global vsce
             - npm install
             - vsce package --yarn
             - curl -X POST "https://${BITBUCKET_USERNAME}:${BITBUCKET_APP_PASSWORD}@api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/downloads" --form files=@"/opt/atlassian/pipelines/agent/build/vscode-extensio-flutter-bloc-architecture-${BITBUCKET_TAG}.vsix"
