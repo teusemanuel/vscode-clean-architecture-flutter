@@ -2,7 +2,7 @@
 	"name": "vscode-extensio-flutter-bloc-architecture",
 	"displayName": "Synvata Bloc Architecture Scaffolding",
 	"description": "Add new feature easily with well structured directories (Bloc Architecture pattern)",
-	"version": "1.0.1",
+	"version": "1.0.3",
 	"publisher": "Mateus Emanuel Araujo",
 	"repository": {
 		"type": "git",
@@ -86,7 +86,6 @@
 		"pretest": "yarn run compile && yarn run lint",
 		"lint": "eslint src --ext ts",
 		"test": "node ./out/test/runTest.js",
-		"build": "vsce package --yarn",
 		"version-generate": "ts-node version-auto-generate.ts"
 	},
 	"devDependencies": {
