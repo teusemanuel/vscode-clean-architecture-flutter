@@ -12,7 +12,7 @@ import { createDirectories, createDirectory } from "./utils/directory";
 import { getPageTemplate } from "./templates/application/pages.template";
 
 export class ApplicationCubit extends Generator {
-    async generate(featureName: string, targetDirectory: string, packageName: string): Promise<any> {
+    async generate(featureName: string, targetDirectory: string, packageName: string, useInjectable: boolean): Promise<any> {
         const featureNamePath = changeCase.snakeCase(featureName).toLowerCase()
         // Create the application layer
         const applicationDirectoryPath = path.join(
@@ -34,10 +34,10 @@ export class ApplicationCubit extends Generator {
 
         const packagePath = path.join(packageName, "application", featureNamePath);
         // Generate the bloc code in the application layer
-        await this.generateCubitCode(featureName, featureDirectoryPath, true, packagePath);
+        await this.generateCubitCode(featureName, featureDirectoryPath, useInjectable, packagePath, packageName);
     }
 
-    generateCubitCode = async (blocName: string, targetDirectory: string, useEquatable: boolean, packagePath: string): Promise<void> => {
+    generateCubitCode = async (blocName: string, targetDirectory: string, useInjectable: boolean, packagePath: string, packageRoot: string): Promise<void> => {
         const blocDirectoryPath = `${targetDirectory}/cubit`;
         if (!existsSync(blocDirectoryPath)) {
             await createDirectory(blocDirectoryPath);
@@ -48,9 +48,9 @@ export class ApplicationCubit extends Generator {
         }
 
         await Promise.all([
-            this.createByTemplate(blocName, 'state', targetDirectory, useEquatable, packagePath),
-            this.createByTemplate(blocName, 'cubit', targetDirectory, useEquatable, packagePath),
-            this.createByTemplate(blocName, 'page', targetDirectory, useEquatable, packagePath),
+            this.createByTemplate(blocName, 'state', targetDirectory, useInjectable, packagePath, packageRoot),
+            this.createByTemplate(blocName, 'cubit', targetDirectory, useInjectable, packagePath, packageRoot),
+            this.createByTemplate(blocName, 'page', targetDirectory, useInjectable, packagePath, packageRoot),
         ]);
     }
 
@@ -58,8 +58,9 @@ export class ApplicationCubit extends Generator {
         fileName: string,
         type: 'state' | 'cubit' | 'page',
         featureDirectoryPath: string,
-        useEquatable: boolean,
-        packagePath: string
+        useInjectable: boolean,
+        packagePath: string,
+        packageRoot: string,
     ) => {
         const snakeCaseFileName = changeCase.snakeCase(fileName).toLowerCase();
         let path: string = '';
@@ -67,15 +68,15 @@ export class ApplicationCubit extends Generator {
         switch (type) {
             case "state":
                 path = `${featureDirectoryPath}/cubit/${snakeCaseFileName}_state.dart`;
-                data = getCubitStateTemplate(fileName, useEquatable);
+                data = getCubitStateTemplate(fileName, true);
                 break;
             case "cubit":
                 path = `${featureDirectoryPath}/cubit/${snakeCaseFileName}_cubit.dart`;
-                data = getCubitTemplate(fileName, useEquatable);
+                data = getCubitTemplate(fileName, useInjectable);
                 break;
             case "page":
                 path = `${featureDirectoryPath}/pages/${snakeCaseFileName}.page.dart`;
-                data = getPageTemplate(fileName, packagePath, 'cubit');
+                data = getPageTemplate(fileName, packagePath, 'cubit', packageRoot, useInjectable);
                 break;
 
             default:

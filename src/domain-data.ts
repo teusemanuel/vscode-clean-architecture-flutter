@@ -3,17 +3,17 @@ import * as changeCase from "change-case";
 import * as mkdirp from "mkdirp";
 import * as path from "path";
 import {
-    getModelInterfaceTemplate,
+    getModelTemplate,
     getRepositoryTemplate,
     getEntityTemplate,
     getRepositoryInterfaceTemplate,
 } from "./templates";
-import { existsSync, lstatSync, writeFile, appendFile } from "fs";
+import { existsSync, writeFile } from "fs";
 import { Generator } from "./core/generator";
 import { createDirectories, createDirectory } from "./utils/directory";
 
 export class DomainData extends Generator {
-    async generate(featureName: string, targetDirectory: string, packageName: string): Promise<any> {
+    async generate(featureName: string, targetDirectory: string, packageName: string, useInjectable: boolean): Promise<any> {
         const featureNamePath = changeCase.snakeCase(featureName).toLowerCase();
         // Create the data layer
         const dataDirectoryPath = path.join(
@@ -51,60 +51,39 @@ export class DomainData extends Generator {
 
         const packageDomainPath = path.join(packageName, "domain", featureNamePath);
         const packageDataPath = path.join(packageName, "data", featureNamePath);
-        // Generate the datasources, models and repositories code in the data layer
-        await this.generateDataCode(featureName, featureDataDirectoryPath, packageDomainPath, packageDataPath);
+
+        // Generate the models and repositories code in the data layer
+        await Promise.all([
+            this.createByTemplate(featureName, 'data.models', featureDataDirectoryPath, packageDomainPath, packageDataPath),
+            this.createByTemplate(featureName, 'data.repositories', featureDataDirectoryPath, packageDomainPath, packageDataPath, useInjectable),
+        ]);
 
         // Generate the entities and repositories code in the domain layer
-        await this.generateDomainCode(featureName, featureDomainDirectoryPath, packageDomainPath, packageDataPath);
-    }
-
-    private async generateDomainCode(
-        fileName: string,
-        directoryPath: string,
-        packageDomainPath: string,
-        packageDataPath: string,
-    ) {
-
         await Promise.all([
-            this.createByTemplate(fileName, 'domain.entities', directoryPath, packageDomainPath, packageDataPath),
-            this.createByTemplate(fileName, 'domain.repositories', directoryPath, packageDomainPath, packageDataPath),
-        ]);
-    }
-
-    private async generateDataCode(
-        fileName: string,
-        directoryPath: string,
-        packageDomainPath: string,
-        packageDataPath: string,
-    ) {
-
-        await Promise.all([
-            this.createByTemplate(fileName, 'data.datasources', directoryPath, packageDomainPath, packageDataPath),
-            this.createByTemplate(fileName, 'data.models', directoryPath, packageDomainPath, packageDataPath),
-            this.createByTemplate(fileName, 'data.repositories', directoryPath, packageDomainPath, packageDataPath),
+            this.createByTemplate(featureName, 'domain.entities', featureDomainDirectoryPath, packageDomainPath, packageDataPath),
+            this.createByTemplate(featureName, 'domain.repositories', featureDomainDirectoryPath, packageDomainPath, packageDataPath),
         ]);
     }
 
     private createByTemplate = (
         fileName: string,
-        type: 'data.datasources' | 'data.models' | 'data.repositories' | 'domain.entities' | 'domain.repositories',
+        type: 'data.models' | 'data.repositories' | 'domain.entities' | 'domain.repositories',
         directoryPath: string,
         packageDomainPath: string,
         packageDataPath: string,
+        useInjectable?: boolean,
     ) => {
         const snakeCaseFileName = changeCase.snakeCase(fileName).toLowerCase();
         let path: string = '';
         let data: string = '';
         switch (type) {
-            case "data.datasources":
-                return Promise.resolve();
             case "data.models":
                 path = `${directoryPath}/models/${snakeCaseFileName}.model.dart`;
-                data = getModelInterfaceTemplate(fileName, packageDomainPath);
+                data = getModelTemplate(fileName, packageDomainPath);
                 break;
             case "data.repositories":
                 path = `${directoryPath}/repositories/${snakeCaseFileName}.repository.dart`;
-                data = getRepositoryTemplate(fileName, packageDomainPath, packageDataPath);
+                data = getRepositoryTemplate(fileName, packageDomainPath, packageDataPath, useInjectable == true);
                 break;
             case "domain.entities":
                 path = `${directoryPath}/entities/${snakeCaseFileName}.dart`;
