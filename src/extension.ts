@@ -16,6 +16,7 @@ import { ApplicationBloc } from "./application-bloc";
 import { Generator } from "./core/generator";
 import { ApplicationCubit } from "./application-cubit";
 import { DomainData } from "./domain-data";
+import { Datasource } from "./datasource";
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -34,18 +35,22 @@ export function activate(context: ExtensionContext) {
 		execute(uri, 'domain-data');
 	});
 
+	const datasourceCommand = commands.registerCommand("extension.bloc-architecture-datasource", async (uri: Uri) => {
+		execute(uri, 'datasource');
+	});
+
 	const allCommand = commands.registerCommand("extension.bloc-architecture-all", async (uri: Uri) => {
 		execute(uri, 'all');
 	});
 
-	context.subscriptions.push(blocCommand, cubitCommand, dataCommand, allCommand);
+	context.subscriptions.push(blocCommand, cubitCommand, dataCommand, datasourceCommand, allCommand);
 }
 
 // this method is called when your extension is deactivated
 export function deactivate() { }
 
 
-export async function execute(uri: Uri, type: 'bloc' | 'cubit' | 'domain-data' | 'all') {
+export async function execute(uri: Uri, type: 'bloc' | 'cubit' | 'domain-data' | 'datasource' | 'all') {
 	// Show feature prompt
 	let featureName = await promptForFeatureName();
 
@@ -63,11 +68,10 @@ export async function execute(uri: Uri, type: 'bloc' | 'cubit' | 'domain-data' |
 		window.showErrorMessage(error.message);
 	}
 
-	const useEquatable = true;
+	const useInjectable: boolean = await promptForUseInjectable();
 
-	const pascalCaseFeatureName = changeCase.pascalCase(
-		featureName
-	);
+	const pascalCaseFeatureName = changeCase.pascalCase(featureName);
+
 	try {
 		let generators: Generator[] = [];
 		let message = ''
@@ -85,6 +89,10 @@ export async function execute(uri: Uri, type: 'bloc' | 'cubit' | 'domain-data' |
 				generators.push(new DomainData());
 				message = `Successfully Generated ${pascalCaseFeatureName} Domain + Data`;
 				break;
+			case "datasource":
+				generators.push(new Datasource());
+				message = `Successfully Generated ${pascalCaseFeatureName} Datasource`;
+				break;
 			case "all":
 				const useBloc = await promptForUseCubitOrBloc();
 				generators.push(useBloc ? new ApplicationBloc() : new ApplicationCubit());
@@ -96,7 +104,7 @@ export async function execute(uri: Uri, type: 'bloc' | 'cubit' | 'domain-data' |
 				break;
 		}
 		for (const generator of generators) {
-			await generator.generate(`${featureName}`, targetDirectory, packageName);
+			await generator.generate(`${featureName}`, targetDirectory, packageName, useInjectable);
 		}
 		window.showInformationMessage(message);
 	} catch (error) {
@@ -159,18 +167,34 @@ export function promptForFeatureName(): Thenable<string | undefined> {
 }
 
 export async function promptForUseCubitOrBloc(): Promise<boolean> {
-	const useEquatablePromptValues: string[] = ["cubit (default)", "bloc (advanced)"];
-	const useEquatablePromptOptions: QuickPickOptions = {
+	const useStateManagementPromptValues: string[] = ["cubit (default)", "bloc (advanced)"];
+	const useStateMamagementPromptOptions: QuickPickOptions = {
 		placeHolder:
 			"Do you want to use bloc or cubit for State management?",
 		canPickMany: false,
 	};
 
 	const answer = await window.showQuickPick(
-		useEquatablePromptValues,
-		useEquatablePromptOptions
+		useStateManagementPromptValues,
+		useStateMamagementPromptOptions
 	);
 
 	return answer === "bloc (advanced)";
+}
+
+export async function promptForUseInjectable(): Promise<boolean> {
+	const useInjectablePromptValues: string[] = ["yes (default)", "no"];
+	const useInjectablePromptOptions: QuickPickOptions = {
+		placeHolder:
+			"Do you want to use injectable?",
+		canPickMany: false,
+	};
+
+	const answer = await window.showQuickPick(
+		useInjectablePromptValues,
+		useInjectablePromptOptions
+	);
+
+	return answer !== "no";
 }
 

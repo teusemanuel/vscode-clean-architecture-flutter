@@ -14,7 +14,7 @@ import { getPageTemplate } from "./templates/application/pages.template";
 
 export class ApplicationBloc extends Generator {
 
-    async generate(featureName: string, targetDirectory: string, packageName: string): Promise<any> {
+    async generate(featureName: string, targetDirectory: string, packageName: string, useInjectable: boolean): Promise<any> {
         // Create the application layer
         const featureNamePath = changeCase.snakeCase(featureName).toLowerCase();
         const applicationDirectoryPath = path.join(
@@ -36,10 +36,10 @@ export class ApplicationBloc extends Generator {
 
         const packagePath = path.join(packageName, "application", featureNamePath);
         // Generate the bloc code in the application layer
-        await this.generateBlocCode(featureName, featureDirectoryPath, true, packagePath);
+        await this.generateBlocCode(featureName, featureDirectoryPath, packagePath, useInjectable, packageName);
     }
 
-    generateBlocCode = async (blocName: string, targetDirectory: string, useEquatable: boolean, packagePath: string): Promise<void> => {
+    generateBlocCode = async (blocName: string, targetDirectory: string, packagePath: string, useInjectable: boolean, packageRoot: string): Promise<void> => {
         const blocDirectoryPath = `${targetDirectory}/bloc`;
         if (!existsSync(blocDirectoryPath)) {
             await createDirectory(blocDirectoryPath);
@@ -50,10 +50,10 @@ export class ApplicationBloc extends Generator {
         }
 
         await Promise.all([
-            this.createByTemplate(blocName, 'event', targetDirectory, useEquatable, packagePath),
-            this.createByTemplate(blocName, 'state', targetDirectory, useEquatable, packagePath),
-            this.createByTemplate(blocName, 'bloc', targetDirectory, useEquatable, packagePath),
-            this.createByTemplate(blocName, 'page', targetDirectory, useEquatable, packagePath),
+            this.createByTemplate(blocName, 'event', targetDirectory, packagePath, useInjectable, packageRoot),
+            this.createByTemplate(blocName, 'state', targetDirectory, packagePath, useInjectable, packageRoot),
+            this.createByTemplate(blocName, 'bloc', targetDirectory, packagePath, useInjectable, packageRoot),
+            this.createByTemplate(blocName, 'page', targetDirectory, packagePath, useInjectable, packageRoot),
         ]);
     }
 
@@ -61,8 +61,9 @@ export class ApplicationBloc extends Generator {
         fileName: string,
         type: 'event' | 'state' | 'bloc' | 'page',
         featureDirectoryPath: string,
-        useEquatable: boolean,
-        packagePath: string
+        packagePath: string,
+        useInjectable: boolean,
+        packageRoot: string,
     ) => {
         const snakeCaseFileName = changeCase.snakeCase(fileName).toLowerCase();
         let path: string = '';
@@ -70,19 +71,19 @@ export class ApplicationBloc extends Generator {
         switch (type) {
             case "event":
                 path = `${featureDirectoryPath}/bloc/${snakeCaseFileName}_event.dart`;
-                data = getBlocEventTemplate(fileName, useEquatable);
+                data = getBlocEventTemplate(fileName, true);
                 break;
             case "state":
                 path = `${featureDirectoryPath}/bloc/${snakeCaseFileName}_state.dart`;
-                data = getBlocStateTemplate(fileName, useEquatable);
+                data = getBlocStateTemplate(fileName, true);
                 break;
             case "bloc":
                 path = `${featureDirectoryPath}/bloc/${snakeCaseFileName}_bloc.dart`;
-                data = getBlocTemplate(fileName, useEquatable);
+                data = getBlocTemplate(fileName, useInjectable);
                 break;
             case "page":
                 path = `${featureDirectoryPath}/pages/${snakeCaseFileName}.page.dart`;
-                data = getPageTemplate(fileName, packagePath, 'bloc');
+                data = getPageTemplate(fileName, packagePath, 'bloc', packageRoot, useInjectable);
                 break;
 
             default:

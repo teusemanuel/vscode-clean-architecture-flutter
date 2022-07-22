@@ -1,6 +1,6 @@
 import * as changeCase from "change-case";
 
-export function getModelInterfaceTemplate (pageName: string, domainDirectoryPath: string): string {
+export function getModelTemplate (pageName: string, domainDirectoryPath: string): string {
   const pascalCasePageName = changeCase.pascalCase(pageName);
   const snakeCasePageName = changeCase.snakeCase(pageName).toLowerCase();
   return `import 'package:${domainDirectoryPath}/entities/${snakeCasePageName}.dart';

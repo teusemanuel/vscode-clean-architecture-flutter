@@ -1,6 +1,39 @@
 import * as changeCase from "change-case";
 
-export function getPageTemplate (pageName: string, packagePath: string, blocType: 'bloc' | 'cubit'): string {
+export function getPageTemplate (pageName: string, packagePath: string, blocType: 'bloc' | 'cubit', packageRoot: string, useInjectable: boolean): string {
+    return useInjectable
+    ? getInjectablePage(pageName, packagePath, blocType, packageRoot)
+    : getDefaultPage(pageName, packagePath, blocType);
+}
+
+export function getInjectablePage (pageName: string, packagePath: string, blocType: 'bloc' | 'cubit', packageRoot: string): string {
+    const pascalCasePageName = changeCase.pascalCase(pageName);
+    const pascalCaseBlocType = changeCase.pascalCase(blocType);
+    const snakeCasePageName = changeCase.snakeCase(pageName).toLowerCase();
+    const hyphenCasePageName = changeCase.paramCase(pageName.toLowerCase());
+    return `import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:${packagePath}/${blocType}/${snakeCasePageName}_${blocType}.dart';
+import 'package:${packageRoot}/core/injection/injection.dart';
+
+class ${pascalCasePageName}Page extends StatelessWidget {
+    static const path = '/${hyphenCasePageName}';
+    const ${pascalCasePageName}Page({Key? key}) : super(key: key);
+
+    @override
+    Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(title: const Text('${pascalCasePageName}')),
+        body: BlocProvider(
+            create: (_) => getIt<${pascalCasePageName}${pascalCaseBlocType}>(),
+            child: Container(),
+        ));
+    }
+}
+`;
+}
+
+export function getDefaultPage (pageName: string, packagePath: string, blocType: 'bloc' | 'cubit'): string {
     const pascalCasePageName = changeCase.pascalCase(pageName);
     const pascalCaseBlocType = changeCase.pascalCase(blocType);
     const snakeCasePageName = changeCase.snakeCase(pageName).toLowerCase();
@@ -10,7 +43,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:${packagePath}/${blocType}/${snakeCasePageName}_${blocType}.dart';
 
 class ${pascalCasePageName}Page extends StatelessWidget {
-    static const path = '${hyphenCasePageName}';
+    static const path = '/${hyphenCasePageName}';
     const ${pascalCasePageName}Page({Key? key}) : super(key: key);
 
     @override

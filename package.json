@@ -48,6 +48,12 @@
 				"icon": "assets/logo.png"
 			},
 			{
+				"command": "extension.bloc-architecture-datasource",
+				"title": "New Datasource",
+				"category": "Synvata Bloc Architecture",
+				"icon": "assets/logo.png"
+			},
+			{
 				"command": "extension.bloc-architecture-all",
 				"title": "New Application + Domain + data",
 				"category": "Synvata Bloc Architecture",
@@ -72,8 +78,13 @@
 					"when": "explorerResourceIsFolder"
 				},
 				{
-					"command": "extension.bloc-architecture-all",
+					"command": "extension.bloc-architecture-datasource",
 					"group": "blocArchitectureGroup@4",
+					"when": "explorerResourceIsFolder"
+				},
+				{
+					"command": "extension.bloc-architecture-all",
+					"group": "blocArchitectureGroup@5",
 					"when": "explorerResourceIsFolder"
 				}
 			]
