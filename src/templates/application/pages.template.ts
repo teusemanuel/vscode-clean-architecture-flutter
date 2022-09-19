@@ -17,18 +17,18 @@ import 'package:${packagePath}/${blocType}/${snakeCasePageName}_${blocType}.dart
 import 'package:${packageRoot}/core/injection/injection.dart';
 
 class ${pascalCasePageName}Page extends StatelessWidget {
-    static const path = '/${hyphenCasePageName}';
-    const ${pascalCasePageName}Page({Key? key}) : super(key: key);
+  static const path = '/${hyphenCasePageName}';
+  const ${pascalCasePageName}Page({Key? key}) : super(key: key);
 
-    @override
-    Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(title: const Text('${pascalCasePageName}')),
-        body: BlocProvider(
-            create: (_) => getIt<${pascalCasePageName}${pascalCaseBlocType}>(),
-            child: Container(),
-        ));
-    }
+  @override
+  Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(title: const Text('${pascalCasePageName}')),
+    body: BlocProvider(
+      create: (_) => getIt<${pascalCasePageName}${pascalCaseBlocType}>(),
+      child: Container(),
+    ));
+  }
 }
 `;
 }

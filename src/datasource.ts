@@ -30,7 +30,7 @@ export class Datasource extends Generator {
         await createDirectories(featureDataSourceDirectoryPath, [
             "datasources",
         ]);
-        const packageDataPath = path.join(packageName, "data", featureNamePath);
+        const packageDataPath = path.join(packageName, "domain", featureNamePath);
         // Generate the datasources, models and repositories code in the data layer
         await this.createByTemplate(featureName, featureDataSourceDirectoryPath, packageDataPath, useInjectable);
     }

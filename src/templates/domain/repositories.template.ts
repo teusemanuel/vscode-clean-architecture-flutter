@@ -6,9 +6,9 @@ export function getRepositoryInterfaceTemplate (pageName: string, domainDirector
     return `import 'package:${domainDirectoryPath}/entities/${snakeCasePageName}.dart';
 
 abstract class I${pascalCasePageName}Repository {
-    Future<bool> update${pascalCasePageName}(${pascalCasePageName} value);
-    Future<List<${pascalCasePageName}>> get();
-    Future<${pascalCasePageName}> byId(int id);
+  Future<bool> update${pascalCasePageName}(${pascalCasePageName} value);
+  Future<List<${pascalCasePageName}>> get();
+  Future<${pascalCasePageName}> byId(int id);
 }
 `;
 }

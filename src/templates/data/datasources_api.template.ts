@@ -12,7 +12,7 @@ function getInjectableDatasource(pageName: string, domainDirectoryPath: string, 
 	const pathCasePageName = changeCase.paramCase(pageName).toLowerCase();
 	return `import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
-import 'package:${domainDirectoryPath}/models/${snakeCasePageName}.model.dart';
+import 'package:${domainDirectoryPath}/entities/${snakeCasePageName}.dart';
 import 'package:retrofit/retrofit.dart';
 
 part '${snakeCasePageName}_api.datasource.g.dart';
@@ -24,7 +24,7 @@ abstract class ${pascalCasePageName}ApiDatasource {
   factory ${pascalCasePageName}ApiDatasource(@Named('${dioInjectionName}') Dio dio, {@factoryParam String? baseUrl}) = _${pascalCasePageName}ApiDatasource;
 
   @GET('${pathCasePageName}')
-  Future<${pascalCasePageName}Model> get();
+  Future<${pascalCasePageName}> get();
 }
 `;
 }
@@ -34,7 +34,7 @@ function getDatasource(pageName: string, domainDirectoryPath: string): string {
 	const snakeCasePageName = changeCase.snakeCase(pageName).toLowerCase();
 	const pathCasePageName = changeCase.paramCase(pageName).toLowerCase();
 	return `import 'package:dio/dio.dart';
-import 'package:${domainDirectoryPath}/models/${snakeCasePageName}.model.dart';
+import 'package:${domainDirectoryPath}/entities/${snakeCasePageName}.dart';
 import 'package:retrofit/retrofit.dart';
 
 part '${snakeCasePageName}_api.datasource.g.dart';
@@ -44,7 +44,7 @@ abstract class ${pascalCasePageName}ApiDatasource {
   factory ${pascalCasePageName}ApiDatasource(Dio dio, {String? baseUrl}) = _${pascalCasePageName}ApiDatasource;
 
   @GET('${pathCasePageName}')
-  Future<${pascalCasePageName}Model> get();
+  Future<${pascalCasePageName}> get();
 }
 `;
 }

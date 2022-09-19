@@ -12,7 +12,7 @@ function getInjectableDatasource(pageName: string, domainDirectoryPath: string, 
 	const snakeCaseDatasourceName = changeCase.snakeCase(pageName).toLowerCase();
 	return `import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
-import 'package:${domainDirectoryPath}/models/${snakeCaseDatasourceName}.model.dart';
+import 'package:${domainDirectoryPath}/entities/${snakeCaseDatasourceName}.dart';
 
 part '${snakeCaseDatasourceName}_api.datasource.g.dart';
 
@@ -23,11 +23,11 @@ class ${pascalCaseDatasourceName}LocalDatasource {
   final SharedPreferences _prefs;
   ${pascalCaseDatasourceName}LocalDatasource(SharedPreferences prefs) : _prefs = prefs;
 
-  ${pascalCaseDatasourceName}Model? get ${camelCaseDatasourceName} => hasSession ? ${pascalCaseDatasourceName}Model.fromJson(jsonDecode(_prefs.getString(_${camelCaseDatasourceName}) ?? '')) : null;
+  ${pascalCaseDatasourceName}? get ${camelCaseDatasourceName} => hasSession ? ${pascalCaseDatasourceName}.fromJson(jsonDecode(_prefs.getString(_${camelCaseDatasourceName}) ?? '')) : null;
 
-  set ${camelCaseDatasourceName}(${pascalCaseDatasourceName}Model? value) => value != null ? _prefs.setString(_${camelCaseDatasourceName}, jsonEncode(value.toJson())) : Future.value(false);
+  set ${camelCaseDatasourceName}(${pascalCaseDatasourceName}? value) => value != null ? _prefs.setString(_${camelCaseDatasourceName}, jsonEncode(value.toJson())) : Future.value(false);
 
-  bool get has${pascalCaseDatasourceName}Model => _prefs.containsKey(_${camelCaseDatasourceName});
+  bool get has${pascalCaseDatasourceName} => _prefs.containsKey(_${camelCaseDatasourceName});
 
   Future<bool> remove() => _prefs.remove(_${camelCaseDatasourceName});
 }
@@ -39,25 +39,25 @@ function getDatasource(pageName: string, domainDirectoryPath: string): string {
 	const camelCaseDatasourceName = changeCase.camelCase(pageName);
 	const snakeCaseDatasourceName = changeCase.snakeCase(pageName).toLowerCase();
 	return `import 'package:dio/dio.dart';
-	import 'package:injectable/injectable.dart';
-	import 'package:${domainDirectoryPath}/models/${snakeCaseDatasourceName}.model.dart';
-	
-	part '${snakeCaseDatasourceName}_api.datasource.g.dart';
-	
-	@singleton
-	class ${pascalCaseDatasourceName}LocalDatasource {
-	  // TODO Change key name
-	  static const String _${camelCaseDatasourceName} = "app_name_key_${camelCaseDatasourceName}";
-	  final SharedPreferences _prefs;
-	  ${pascalCaseDatasourceName}LocalDatasource(SharedPreferences prefs) : _prefs = prefs;
-	
-	  ${pascalCaseDatasourceName}Model? get ${camelCaseDatasourceName} => hasSession ? ${pascalCaseDatasourceName}Model.fromJson(jsonDecode(_prefs.getString(_${camelCaseDatasourceName}) ?? '')) : null;
-	
-	  set ${camelCaseDatasourceName}(${pascalCaseDatasourceName}Model? value) => value != null ? _prefs.setString(_${camelCaseDatasourceName}, jsonEncode(value.toJson())) : Future.value(false);
-	
-	  bool get has${pascalCaseDatasourceName}Model => _prefs.containsKey(_${camelCaseDatasourceName});
-	
-	  Future<bool> remove() => _prefs.remove(_${camelCaseDatasourceName});
-	}
-	`;
+import 'package:injectable/injectable.dart';
+import 'package:${domainDirectoryPath}/entities/${snakeCaseDatasourceName}.dart';
+
+part '${snakeCaseDatasourceName}_api.datasource.g.dart';
+
+@singleton
+class ${pascalCaseDatasourceName}LocalDatasource {
+  // TODO Change key name
+  static const String _${camelCaseDatasourceName} = "app_name_key_${camelCaseDatasourceName}";
+  final SharedPreferences _prefs;
+  ${pascalCaseDatasourceName}LocalDatasource(SharedPreferences prefs) : _prefs = prefs;
+
+  ${pascalCaseDatasourceName}? get ${camelCaseDatasourceName} => hasSession ? ${pascalCaseDatasourceName}.fromJson(jsonDecode(_prefs.getString(_${camelCaseDatasourceName}) ?? '')) : null;
+
+  set ${camelCaseDatasourceName}(${pascalCaseDatasourceName}? value) => value != null ? _prefs.setString(_${camelCaseDatasourceName}, jsonEncode(value.toJson())) : Future.value(false);
+
+  bool get has${pascalCaseDatasourceName} => _prefs.containsKey(_${camelCaseDatasourceName});
+
+  Future<bool> remove() => _prefs.remove(_${camelCaseDatasourceName});
+}
+`;
 }

@@ -11,7 +11,6 @@ function getRepositoryInjectable(pageName: string, domainDirectoryPath: string, 
   const camelCaseRepositoryName = changeCase.camelCase(pageName);
   const snakeCaseRepositoryName = changeCase.snakeCase(pageName).toLowerCase();
   return `import 'package:injectable/injectable.dart';
-import 'package:${dataDirectoryPath}/models/${snakeCaseRepositoryName}.model.dart';
 import 'package:${domainDirectoryPath}/entities/${snakeCaseRepositoryName}.dart';
 import 'package:${domainDirectoryPath}/repositories/${snakeCaseRepositoryName}.repository.i.dart';
 
@@ -45,8 +44,7 @@ class ${pascalCaseRepositoryName}Repository implements I${pascalCaseRepositoryNa
 function getRepository(pageName: string, domainDirectoryPath: string, dataDirectoryPath: string): string {
   const pascalCaseRepositoryName = changeCase.pascalCase(pageName);
   const snakeCaseRepositoryName = changeCase.snakeCase(pageName).toLowerCase();
-  return `import 'package:${dataDirectoryPath}/models/${snakeCaseRepositoryName}.model.dart';
-import 'package:${domainDirectoryPath}/entities/${snakeCaseRepositoryName}.dart';
+  return `import 'package:${domainDirectoryPath}/entities/${snakeCaseRepositoryName}.dart';
 import 'package:${domainDirectoryPath}/repositories/${snakeCaseRepositoryName}.repository.i.dart';
 
 class ${pascalCaseRepositoryName}Repository implements I${pascalCaseRepositoryName}Repository {
