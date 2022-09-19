@@ -3,7 +3,6 @@ import * as changeCase from "change-case";
 import * as mkdirp from "mkdirp";
 import * as path from "path";
 import {
-    getModelTemplate,
     getRepositoryTemplate,
     getEntityTemplate,
     getRepositoryInterfaceTemplate,
@@ -54,7 +53,6 @@ export class DomainData extends Generator {
 
         // Generate the models and repositories code in the data layer
         await Promise.all([
-            this.createByTemplate(featureName, 'data.models', featureDataDirectoryPath, packageDomainPath, packageDataPath),
             this.createByTemplate(featureName, 'data.repositories', featureDataDirectoryPath, packageDomainPath, packageDataPath, useInjectable),
         ]);
 
@@ -67,7 +65,7 @@ export class DomainData extends Generator {
 
     private createByTemplate = (
         fileName: string,
-        type: 'data.models' | 'data.repositories' | 'domain.entities' | 'domain.repositories',
+        type:  'data.repositories' | 'domain.entities' | 'domain.repositories',
         directoryPath: string,
         packageDomainPath: string,
         packageDataPath: string,
@@ -77,10 +75,6 @@ export class DomainData extends Generator {
         let path: string = '';
         let data: string = '';
         switch (type) {
-            case "data.models":
-                path = `${directoryPath}/models/${snakeCaseFileName}.model.dart`;
-                data = getModelTemplate(fileName, packageDomainPath);
-                break;
             case "data.repositories":
                 path = `${directoryPath}/repositories/${snakeCaseFileName}.repository.dart`;
                 data = getRepositoryTemplate(fileName, packageDomainPath, packageDataPath, useInjectable == true);
