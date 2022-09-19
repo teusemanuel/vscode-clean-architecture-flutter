@@ -44,7 +44,7 @@ export class Datasource extends Generator {
 
         let dioInjectionName = '';
         if(useInjectable) {
-            dioInjectionName = (await promptForDioInjectionName()) || 'dioClient'
+            dioInjectionName = (await promptForDioInjectionName()) || 'clientDio'
         }
         let dsType = await promptForDSType();
 
