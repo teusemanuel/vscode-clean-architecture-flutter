@@ -1,38 +1,66 @@
 import * as changeCase from "change-case";
+import { BlocType } from "../../../utils";
 
-export function getCubitStateTemplate (
+export function getCubitStateTemplate(
   cubitName: string,
-  useEquatable: boolean
+  type: BlocType
 ): string {
-  return useEquatable
-    ? getEquatableCubitStateTemplate(cubitName)
-    : getDefaultCubitStateTemplate(cubitName);
+  switch (type) {
+    case BlocType.Freezed:
+      return getFreezedCubitStateTemplate(cubitName);
+    case BlocType.Equatable:
+      return getEquatableCubitStateTemplate(cubitName, true);
+    default:
+      return getDefaultCubitStateTemplate(cubitName, true);
+  }
 }
 
-function getEquatableCubitStateTemplate (cubitName: string): string {
+function getEquatableCubitStateTemplate(
+  cubitName: string,
+  useSealedClasses: boolean
+): string {
+  const classPrefix = useSealedClasses ? "sealed" : "abstract";
+  const subclassPrefix = useSealedClasses ? "final " : "";
   const pascalCaseCubitName = changeCase.pascalCase(cubitName);
-  const snakeCaseCubitName = changeCase.snakeCase(cubitName).toLowerCase();
+  const snakeCaseCubitName = changeCase.snakeCase(cubitName);
   return `part of '${snakeCaseCubitName}_cubit.dart';
 
-abstract class ${pascalCaseCubitName}State extends Equatable {
+${classPrefix} class ${pascalCaseCubitName}State extends Equatable {
   const ${pascalCaseCubitName}State();
 
   @override
   List<Object> get props => [];
 }
 
-class ${pascalCaseCubitName}Initial extends ${pascalCaseCubitName}State {}
+${subclassPrefix}class ${pascalCaseCubitName}Initial extends ${pascalCaseCubitName}State {}
 `;
 }
 
-function getDefaultCubitStateTemplate (cubitName: string): string {
+function getDefaultCubitStateTemplate(
+  cubitName: string,
+  useSealedClasses: boolean
+): string {
+  const classPrefix = useSealedClasses ? "sealed" : "abstract";
+  const subclassPrefix = useSealedClasses ? "final " : "";
   const pascalCaseCubitName = changeCase.pascalCase(cubitName);
-  const snakeCaseCubitName = changeCase.snakeCase(cubitName).toLowerCase();
+  const snakeCaseCubitName = changeCase.snakeCase(cubitName);
   return `part of '${snakeCaseCubitName}_cubit.dart';
 
 @immutable
-abstract class ${pascalCaseCubitName}State {}
+${classPrefix} class ${pascalCaseCubitName}State {}
 
-class ${pascalCaseCubitName}Initial extends ${pascalCaseCubitName}State {}
+${subclassPrefix}class ${pascalCaseCubitName}Initial extends ${pascalCaseCubitName}State {}
+`;
+}
+
+function getFreezedCubitStateTemplate(cubitName: string): string {
+  const pascalCaseCubitName = changeCase.pascalCase(cubitName);
+  const snakeCaseCubitName = changeCase.snakeCase(cubitName);
+  return `part of '${snakeCaseCubitName}_cubit.dart';
+
+@freezed
+class ${pascalCaseCubitName}State with _\$${pascalCaseCubitName}State {
+  const factory ${pascalCaseCubitName}State.initial() = _Initial;
+}
 `;
 }

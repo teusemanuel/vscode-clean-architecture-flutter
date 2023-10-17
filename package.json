@@ -16,6 +16,7 @@
 		"Programming Languages"
 	],
 	"keywords": [
+		"clean-architecture",
 		"bloc-architecture",
 		"dart",
 		"flutter",
@@ -23,38 +24,72 @@
 		"state-management"
 	],
 	"activationEvents": [
-		"onCommand:extension.bloc-architecture",
+		"onCommand:extension.architecture",
 		"workspaceContains:**/pubspec.yaml"
 	],
-	"main": "./out/extension.js",
+	"main": "./dist/extension.js",
 	"contributes": {
+		"configuration": [
+			{
+				"title": "Flutter Bloc Architecture",
+				"properties": {
+					"architecture.useInjectable": {
+						"type": "boolean",
+						"default": true,
+						"description": "If the project uses the injectable lib, the template will be created with the injectable annotation."
+					},
+					"architecture.injectionFile.path": {
+						"type": "string",
+						"default": "core/injection/injection.dart",
+						"description": "file path inside the lib folder where the `injectable` package configuration is located."
+					},
+					"architecture.localdb.type": {
+						"type": "string",
+						"default": "sqflite",
+						"description": "Type of injection used in Database local datasource.",
+						"enum": [
+							"sqflite",
+							"floor",
+							"hive",
+							"objectbox"
+						],
+						"enumDescriptions": [
+							"SQLite plugin for Flutter. Supports iOS, Android and MacOS (SQLite)",
+							"Provides a neat SQLite abstraction for your Flutter applications inspired by the Room persistence library (SQLite)",
+							"Lightweight and blazing fast key-value database written in pure Dart (NoSQL database)",
+							"great option for storing Dart objects in your cross-platform apps (NoSQL database)"
+						]
+					}
+				}
+			}
+		],
 		"commands": [
 			{
-				"command": "extension.bloc-architecture-application-bloc",
+				"command": "extension.architecture-bloc-application",
 				"title": "Bloc: New Application",
 				"category": "Synvata Bloc Architecture",
 				"icon": "assets/logo.png"
 			},
 			{
-				"command": "extension.bloc-architecture-application-cubit",
+				"command": "extension.architecture-cubit-application",
 				"title": "Cubit: New Application",
 				"category": "Synvata Bloc Architecture",
 				"icon": "assets/logo.png"
 			},
 			{
-				"command": "extension.bloc-architecture-domain-data",
+				"command": "extension.architecture-domain-data",
 				"title": "New Domain + data",
 				"category": "Synvata Bloc Architecture",
 				"icon": "assets/logo.png"
 			},
 			{
-				"command": "extension.bloc-architecture-datasource",
+				"command": "extension.architecture-datasource",
 				"title": "New Datasource",
 				"category": "Synvata Bloc Architecture",
 				"icon": "assets/logo.png"
 			},
 			{
-				"command": "extension.bloc-architecture-all",
+				"command": "extension.architecture-all",
 				"title": "New Application + Domain + data",
 				"category": "Synvata Bloc Architecture",
 				"icon": "assets/logo.png"
@@ -63,27 +98,27 @@
 		"menus": {
 			"explorer/context": [
 				{
-					"command": "extension.bloc-architecture-application-bloc",
+					"command": "extension.architecture-bloc-application",
 					"group": "blocArchitectureGroup@1",
 					"when": "explorerResourceIsFolder"
 				},
 				{
-					"command": "extension.bloc-architecture-application-cubit",
+					"command": "extension.architecture-cubit-application",
 					"group": "blocArchitectureGroup@2",
 					"when": "explorerResourceIsFolder"
 				},
 				{
-					"command": "extension.bloc-architecture-domain-data",
+					"command": "extension.architecture-domain-data",
 					"group": "blocArchitectureGroup@3",
 					"when": "explorerResourceIsFolder"
 				},
 				{
-					"command": "extension.bloc-architecture-datasource",
+					"command": "extension.architecture-datasource",
 					"group": "blocArchitectureGroup@4",
 					"when": "explorerResourceIsFolder"
 				},
 				{
-					"command": "extension.bloc-architecture-all",
+					"command": "extension.architecture-all",
 					"group": "blocArchitectureGroup@5",
 					"when": "explorerResourceIsFolder"
 				}
@@ -96,7 +131,7 @@
 		"watch": "tsc -watch -p ./",
 		"pretest": "yarn run compile && yarn run lint",
 		"lint": "eslint src --ext ts",
-		"test": "node ./out/test/runTest.js",
+		"test": "node ./dist/test/runTest.js",
 		"version-generate": "ts-node version-auto-generate.ts"
 	},
 	"devDependencies": {

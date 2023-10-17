@@ -11,10 +11,10 @@ export async function createDirectories(
     await createDirectory(targetDirectory);
   }
   // Creat the children
-  childDirectories.map(
-    async (directory) =>
-      await createDirectory(path.join(targetDirectory, directory))
-  );
+  await Promise.all(childDirectories.map(
+    (directory) =>
+      createDirectory(path.join(targetDirectory, directory))
+  ));
 }
 
 export async function createDirectory(targetDirectory: string): Promise<void> {

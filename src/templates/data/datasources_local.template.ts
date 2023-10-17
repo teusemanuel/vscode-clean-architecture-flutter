@@ -1,16 +1,18 @@
 import * as changeCase from "change-case";
+import { workspace } from "vscode";
 
-export function getDatasourceLocalTemplate(pageName: string, domainDirectoryPath: string, useInjectable: boolean, dioInjectionName: string): string {
-	return useInjectable
-		? getInjectableDatasource(pageName, domainDirectoryPath, dioInjectionName)
-		: getDatasource(pageName, domainDirectoryPath);
+export function getDatasourceLocalTemplate(pageName: string, domainDirectoryPath: string): string {
+  const useInjectable = workspace.getConfiguration("architecture").get<boolean>("useInjectable");
+  return useInjectable
+    ? getInjectableDatasource(pageName, domainDirectoryPath)
+    : getDatasource(pageName, domainDirectoryPath);
 }
 
-function getInjectableDatasource(pageName: string, domainDirectoryPath: string, dioInjectionName: string): string {
-	const pascalCaseDatasourceName = changeCase.pascalCase(pageName);
-	const camelCaseDatasourceName = changeCase.camelCase(pageName);
-	const snakeCaseDatasourceName = changeCase.snakeCase(pageName).toLowerCase();
-	return `import 'package:dio/dio.dart';
+function getInjectableDatasource(pageName: string, domainDirectoryPath: string,): string {
+  const pascalCaseDatasourceName = changeCase.pascalCase(pageName);
+  const camelCaseDatasourceName = changeCase.camelCase(pageName);
+  const snakeCaseDatasourceName = changeCase.snakeCase(pageName).toLowerCase();
+  return `import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:${domainDirectoryPath}/entities/${snakeCaseDatasourceName}.dart';
 
@@ -35,10 +37,10 @@ class ${pascalCaseDatasourceName}LocalDatasource {
 }
 
 function getDatasource(pageName: string, domainDirectoryPath: string): string {
-	const pascalCaseDatasourceName = changeCase.pascalCase(pageName);
-	const camelCaseDatasourceName = changeCase.camelCase(pageName);
-	const snakeCaseDatasourceName = changeCase.snakeCase(pageName).toLowerCase();
-	return `import 'package:dio/dio.dart';
+  const pascalCaseDatasourceName = changeCase.pascalCase(pageName);
+  const camelCaseDatasourceName = changeCase.camelCase(pageName);
+  const snakeCaseDatasourceName = changeCase.snakeCase(pageName).toLowerCase();
+  return `import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:${domainDirectoryPath}/entities/${snakeCaseDatasourceName}.dart';
 

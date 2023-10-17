@@ -1,20 +1,30 @@
 import * as changeCase from "change-case";
+import { BlocType } from "../../../utils";
 
-export function getBlocEventTemplate (
+export function getBlocEventTemplate(
   blocName: string,
-  useEquatable: boolean
+  type: BlocType
 ): string {
-  return useEquatable
-    ? getEquatableBlocEventTemplate(blocName)
-    : getDefaultBlocEventTemplate(blocName);
+  switch (type) {
+    case BlocType.Freezed:
+      return getFreezedBlocEvent(blocName);
+    case BlocType.Equatable:
+      return getEquatableBlocEventTemplate(blocName, true);
+    default:
+      return getDefaultBlocEventTemplate(blocName, true);
+  }
 }
 
-function getEquatableBlocEventTemplate (blocName: string): string {
+function getEquatableBlocEventTemplate(
+  blocName: string,
+  useSealedClasses: boolean
+): string {
+  const classPrefix = useSealedClasses ? "sealed" : "abstract";
   const pascalCaseBlocName = changeCase.pascalCase(blocName);
-  const snakeCaseBlocName = changeCase.snakeCase(blocName).toLowerCase();
+  const snakeCaseBlocName = changeCase.snakeCase(blocName);
   return `part of '${snakeCaseBlocName}_bloc.dart';
 
-abstract class ${pascalCaseBlocName}Event extends Equatable {
+${classPrefix} class ${pascalCaseBlocName}Event extends Equatable {
   const ${pascalCaseBlocName}Event();
 
   @override
@@ -23,11 +33,27 @@ abstract class ${pascalCaseBlocName}Event extends Equatable {
 `;
 }
 
-function getDefaultBlocEventTemplate (blocName: string): string {
+function getDefaultBlocEventTemplate(
+  blocName: string,
+  useSealedClasses: boolean
+): string {
+  const classPrefix = useSealedClasses ? "sealed" : "abstract";
   const pascalCaseBlocName = changeCase.pascalCase(blocName);
-  const snakeCaseBlocName = changeCase.snakeCase(blocName).toLowerCase();
+  const snakeCaseBlocName = changeCase.snakeCase(blocName);
   return `part of '${snakeCaseBlocName}_bloc.dart';
+
 @immutable
-abstract class ${pascalCaseBlocName}Event {}
+${classPrefix} class ${pascalCaseBlocName}Event {}
 `;
+}
+
+function getFreezedBlocEvent(blocName: string): string {
+  const pascalCaseBlocName = changeCase.pascalCase(blocName) + "Event";
+  const snakeCaseBlocName = changeCase.snakeCase(blocName);
+  return `part of '${snakeCaseBlocName}_bloc.dart';
+
+@freezed
+class ${pascalCaseBlocName} with _\$${pascalCaseBlocName} {
+  const factory ${pascalCaseBlocName}.started() = _Started;
+}`;
 }
