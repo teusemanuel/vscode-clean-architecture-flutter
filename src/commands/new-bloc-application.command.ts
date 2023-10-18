@@ -14,10 +14,11 @@ import { getPageTemplate } from "../templates/application/pages.template";
 /**
  * External Function responsible to create Bloc application in clean architecture (bloc/, page/, widgets/)
  * @param uri with path of the folder selected by user
+ * @param blocName used when this function is called by `new-application-domain-data.command`
  * @returns  Promisse void
  */
-export const newBlocApplication = async (uri: Uri) => {
-	const blocName = await promptForName('Application Bloc Name', 'ex: home');
+export const newBlocApplication = async (uri: Uri, blocName?: string) => {
+	blocName = blocName || await promptForName('Application Bloc Name', 'ex: home');
 	if (!isNameValid(blocName)) {
 		window.showErrorMessage("The application bloc name must not be empty");
 		return;
@@ -41,13 +42,10 @@ export const newBlocApplication = async (uri: Uri) => {
 	 * Validate and create if nescessario subfolder lib/application
 	 */
 	let applicationDir: string | undefined;
-	if (targetDir.includes('lib/application')) {
+	if (targetDir.includes(path.join('lib', 'application'))) {
 		applicationDir = targetDir;
 	} else {
-		applicationDir = path.join(
-			targetDir,
-			"application"
-		);
+		applicationDir = path.join(targetDir, "application");
 		if (!existsSync(applicationDir!)) {
 			await createDirectory(applicationDir);
 		}
@@ -84,17 +82,17 @@ async function generateApplicationBlocCode(
 	type: BlocType,
 ) {
 
-	for (const path of ['bloc', 'page', 'widgets']) {
-		if (!existsSync(`${applicationDir}/${path}`)) {
-			await createDirectory(`${applicationDir}/${path}`);
+	for (const folder of ['bloc', 'page', 'widgets']) {
+		if (!existsSync(path.join(applicationDir, folder))) {
+			await createDirectory(path.join(applicationDir, folder));
 		}
 	}
 
 	await Promise.all([
-		createBlocEventTemplate(blocName, `${applicationDir}/bloc`, type),
-		createBlocStateTemplate(blocName, `${applicationDir}/bloc`, type),
-		createBlocTemplate(blocName, `${applicationDir}/bloc`, type),
-		createPageTemplate(blocName, `${applicationDir}/page`),
+		createBlocEventTemplate(blocName, path.join(applicationDir, 'bloc'), type),
+		createBlocStateTemplate(blocName, path.join(applicationDir, 'bloc'), type),
+		createBlocTemplate(blocName, path.join(applicationDir, 'bloc'), type),
+		createPageTemplate(blocName, path.join(applicationDir, 'page')),
 	]);
 }
 
@@ -104,7 +102,7 @@ async function createBlocEventTemplate(
 	type: BlocType,
 ): Promise<void> {
 	const snakeCaseBlocName = changeCase.snakeCase(blocName);
-	const targetPath = `${targetDirectory}/${snakeCaseBlocName}_event.dart`;
+	const targetPath = path.join(targetDirectory, `${snakeCaseBlocName}_event.dart`);
 	if (existsSync(targetPath)) {
 		throw Error(`${snakeCaseBlocName}_event.dart already exists`);
 	}
@@ -130,7 +128,7 @@ async function createBlocStateTemplate(
 	type: BlocType,
 ): Promise<void> {
 	const snakeCaseBlocName = changeCase.snakeCase(blocName);
-	const targetPath = `${targetDirectory}/${snakeCaseBlocName}_state.dart`;
+	const targetPath = path.join(targetDirectory, `${snakeCaseBlocName}_state.dart`);
 	if (existsSync(targetPath)) {
 		throw Error(`${snakeCaseBlocName}_state.dart already exists`);
 	}
@@ -156,7 +154,7 @@ async function createBlocTemplate(
 	type: BlocType
 ): Promise<void> {
 	const snakeCaseBlocName = changeCase.snakeCase(blocName);
-	const targetPath = `${targetDirectory}/${snakeCaseBlocName}_bloc.dart`;
+	const targetPath = path.join(targetDirectory, `${snakeCaseBlocName}_bloc.dart`);
 	if (existsSync(targetPath)) {
 		throw Error(`${snakeCaseBlocName}_bloc.dart already exists`);
 	}
@@ -176,7 +174,7 @@ async function createPageTemplate(
 	targetDirectory: string
 ): Promise<void> {
 	const snakeCasePageName = changeCase.snakeCase(pageName);
-	const targetPath = `${targetDirectory}/${snakeCasePageName}.page.dart`;
+	const targetPath = path.join(targetDirectory, `${snakeCasePageName}.page.dart`);
 	if (existsSync(targetPath)) {
 		throw Error(`${snakeCasePageName}.page.dart already exists`);
 	}

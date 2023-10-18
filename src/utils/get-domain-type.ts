@@ -9,7 +9,7 @@ export const enum DomainType {
   Freezed = 'Freezed',
 }
 
-export async function getDefaultDependency(): Promise<DomainType> {
+export async function getDefaultDomainDependency(): Promise<DomainType> {
   if (await hasDependency(freezed_annotation)) {
     return DomainType.Freezed;
   } else if (await hasDependency(equatable)) {

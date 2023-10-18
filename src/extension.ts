@@ -19,4 +19,4 @@ export function activate(_context: ExtensionContext) {
 }
 
 // this method is called when your extension is deactivated
-export function deactivate() { }
+// export function deactivate() { }

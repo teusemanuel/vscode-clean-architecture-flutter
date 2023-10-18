@@ -13,10 +13,11 @@ import { getPageTemplate } from "../templates/application/pages.template";
 /**
  * External Function responsible to create Cubit application in clean architecture (cubit/, page/, widgets/)
  * @param uri with path of the folder selected by user
+ * @param cubitName used when this function is called by `new-application-domain-data.command`
  * @returns  Promisse void
  */
-export const newCubitApplication = async (uri: Uri) => {
-	const cubitName = await promptForName('Application Cubit Name', 'ex: home');
+export const newCubitApplication = async (uri: Uri, cubitName?: string) => {
+	cubitName = cubitName || await promptForName('Application Cubit Name', 'ex: home');
 	if (!isNameValid(cubitName)) {
 		window.showErrorMessage("The application cubit name must not be empty");
 		return;
@@ -40,13 +41,10 @@ export const newCubitApplication = async (uri: Uri) => {
 	 * Validate and create if nescessario subfolder lib/application
 	 */
 	let applicationDir: string | undefined;
-	if (targetDir.includes('lib/application')) {
+	if (targetDir.includes(path.join('lib', 'application'))) {
 		applicationDir = targetDir;
 	} else {
-		applicationDir = path.join(
-			targetDir,
-			"application"
-		);
+		applicationDir = path.join(targetDir, "application");
 		if (!existsSync(applicationDir!)) {
 			await createDirectory(applicationDir);
 		}
@@ -83,15 +81,15 @@ async function generateApplicationCubitCode(
 	type: BlocType
 ) {
 
-	for (const path of ['cubit', 'page', 'widgets']) {
-		if (!existsSync(`${applicationDir}/${path}`)) {
-			await createDirectory(`${applicationDir}/${path}`);
+	for (const folder of ['cubit', 'page', 'widgets']) {
+		if (!existsSync(path.join(applicationDir, folder))) {
+			await createDirectory(path.join(applicationDir, folder));
 		}
 	}
 	await Promise.all([
-		createCubitStateTemplate(cubitName, `${applicationDir}/cubit`, type),
-		createCubitTemplate(cubitName, `${applicationDir}/cubit`, type),
-		createPageTemplate(cubitName, `${applicationDir}/page`),
+		createCubitStateTemplate(cubitName, path.join(applicationDir, 'cubit'), type),
+		createCubitTemplate(cubitName, path.join(applicationDir, 'cubit'), type),
+		createPageTemplate(cubitName, path.join(applicationDir, 'page')),
 	]);
 }
 
@@ -101,7 +99,7 @@ function createCubitStateTemplate(
 	type: BlocType
 ) {
 	const snakeCaseCubitName = changeCase.snakeCase(cubitName);
-	const targetPath = `${targetDirectory}/${snakeCaseCubitName}_state.dart`;
+	const targetPath = path.join(targetDirectory, `${snakeCaseCubitName}_state.dart`);
 	if (existsSync(targetPath)) {
 		throw Error(`${snakeCaseCubitName}_state.dart already exists`);
 	}
@@ -127,7 +125,7 @@ function createCubitTemplate(
 	type: BlocType
 ) {
 	const snakeCaseCubitName = changeCase.snakeCase(cubitName);
-	const targetPath = `${targetDirectory}/${snakeCaseCubitName}_cubit.dart`;
+	const targetPath = path.join(targetDirectory, `${snakeCaseCubitName}_cubit.dart`);
 	if (existsSync(targetPath)) {
 		throw Error(`${snakeCaseCubitName}_cubit.dart already exists`);
 	}
@@ -152,7 +150,7 @@ async function createPageTemplate(
 	targetDirectory: string
 ): Promise<void> {
 	const snakeCasePageName = changeCase.snakeCase(pageName);
-	const targetPath = `${targetDirectory}/${snakeCasePageName}.page.dart`;
+	const targetPath = path.join(targetDirectory, `${snakeCasePageName}.page.dart`);
 	if (existsSync(targetPath)) {
 		throw Error(`${snakeCasePageName}.page.dart already exists`);
 	}

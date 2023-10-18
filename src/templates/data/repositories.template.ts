@@ -1,7 +1,7 @@
 import * as changeCase from "change-case";
 import { workspace } from "vscode";
 
-export function getRepositoryTemplate(pageName: string, domainDirectoryPath: string): string {
+export function getDataRepositoryTemplate(pageName: string, domainDirectoryPath: string): string {
   const useInjectable = workspace.getConfiguration("architecture").get<boolean>("useInjectable");
   return useInjectable
     ? getRepositoryInjectable(pageName, domainDirectoryPath)
@@ -20,7 +20,7 @@ import 'package:${domainDirectoryPath}/repositories/${snakeCaseRepositoryName}.r
 class ${pascalCaseRepositoryName}Repository implements I${pascalCaseRepositoryName}Repository {
   // Inject datasource
   // final ${pascalCaseRepositoryName}ApiDatasource _${camelCaseRepositoryName}API;
-  // ${pascalCaseRepositoryName}Repository(${pascalCaseRepositoryName}ApiDatasource ${camelCaseRepositoryName}API) : _${camelCaseRepositoryName}API = ${camelCaseRepositoryName}API;
+  // ${pascalCaseRepositoryName}Repository(_${camelCaseRepositoryName}API);
     
   @override
   Future<bool> update${pascalCaseRepositoryName}(${pascalCaseRepositoryName} value) async {

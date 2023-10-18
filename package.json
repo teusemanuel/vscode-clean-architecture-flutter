@@ -23,6 +23,7 @@
 		"bloc",
 		"state-management"
 	],
+	"icon": "assets/logo.png",
 	"activationEvents": [
 		"onCommand:extension.architecture",
 		"workspaceContains:**/pubspec.yaml"

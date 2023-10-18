@@ -13,10 +13,11 @@ import { getDatasourceAPITemplate, getDatasourceDBTemplate, getDatasourceLocalTe
 /**
  * External Function responsible to create datasource in clean architecture (*_db.datasource.dart, *_api.datasource.dart, *_pref.datasource.dart)
  * @param uri with path of the folder selected by user
+ * @param dsName used when this function is called by `new-application-domain-data.command`
  * @returns  Promisse void
  */
-export const newDatasource = async (uri: Uri) => {
-	const dsName = await promptForName('Datasource Name', 'ex: user');
+export const newDatasource = async (uri: Uri, dsName?: string) => {
+	dsName = dsName || await promptForName('Datasource Name', 'ex: user');
 	if (!isNameValid(dsName)) {
 		window.showErrorMessage("The datasource name must not be empty");
 		return;
@@ -40,13 +41,10 @@ export const newDatasource = async (uri: Uri) => {
 	 * Validate and create if nescessario subfolder lib/data
 	 */
 	let dsDir: string | undefined;
-	if (targetDir.includes('lib/data')) {
+	if (targetDir.includes(path.join('lib', 'data'))) {
 		dsDir = targetDir;
 	} else {
-		dsDir = path.join(
-			targetDir,
-			"data"
-		);
+		dsDir = path.join(targetDir, "data");
 		if (!existsSync(dsDir!)) {
 			await createDirectory(dsDir);
 		}
@@ -82,28 +80,28 @@ async function generateDatasourceCode(
 ) {
 
 	const dsType = await promptForDatasourceType();
-	if (!existsSync(`${dsDir}/datasources`)) {
-		await createDirectory(`${dsDir}/datasources`);
+	if (!existsSync(path.join(dsDir, 'datasources'))) {
+		await createDirectory(path.join(dsDir, 'datasources'));
 	}
 	switch (dsType) {
 		case DatasourceType.DB:
-			return await createDBDatasource(dsName, `${dsDir}/datasources`);
+			return await createDBDatasourceTemplate(dsName, path.join(dsDir, 'datasources'));
 		case DatasourceType.SPref:
-			return await createSPrefDatasource(dsName, `${dsDir}/datasources`);
+			return await createSPrefDatasourceTemplate(dsName, path.join(dsDir, 'datasources'));
 		case DatasourceType.API:
 		default:
-			return await createAPIDatasource(dsName, `${dsDir}/datasources`);
+			return await createAPIDatasourceTemplate(dsName, path.join(dsDir, 'datasources'));
 	}
 }
 
-async function createDBDatasource(
+async function createDBDatasourceTemplate(
 	dsName: string,
 	targetDirectory: string
 ) {
 	const snakeCaseDsName = changeCase.snakeCase(dsName);
 	const domainDir = path.join(await getPackageName(), "domain", snakeCaseDsName);
 	const dbType = await getDatasourceDBType();
-	const targetPath = `${targetDirectory}/${snakeCaseDsName}_db.datasource.dart`;
+	const targetPath = path.join(targetDirectory, `${snakeCaseDsName}_db.datasource.dart`);
 	if (existsSync(targetPath)) {
 		throw Error(`${snakeCaseDsName}_db.datasource.dart already exists`);
 	}
@@ -123,13 +121,13 @@ async function createDBDatasource(
 	});
 }
 
-async function createAPIDatasource(
+async function createAPIDatasourceTemplate(
 	dsName: string,
 	targetDirectory: string
 ) {
 	const snakeCaseDsName = changeCase.snakeCase(dsName);
 	const domainDir = path.join(await getPackageName(), "domain", snakeCaseDsName);
-	const targetPath = `${targetDirectory}/${snakeCaseDsName}_api.datasource.dart`;
+	const targetPath = path.join(targetDirectory, `${snakeCaseDsName}_api.datasource.dart`);
 	if (existsSync(targetPath)) {
 		throw Error(`${snakeCaseDsName}_api.datasource.dart already exists`);
 	}
@@ -149,13 +147,13 @@ async function createAPIDatasource(
 	});
 }
 
-async function createSPrefDatasource(
+async function createSPrefDatasourceTemplate(
 	dsName: string,
 	targetDirectory: string
 ) {
 	const snakeCaseDsName = changeCase.snakeCase(dsName);
 	const domainDir = path.join(await getPackageName(), "domain", snakeCaseDsName);
-	const targetPath = `${targetDirectory}/${snakeCaseDsName}_sp.datasource.dart`;
+	const targetPath = path.join(targetDirectory, `${snakeCaseDsName}_sp.datasource.dart`);
 	if (existsSync(targetPath)) {
 		throw Error(`${snakeCaseDsName}_sp.datasource.dart already exists`);
 	}

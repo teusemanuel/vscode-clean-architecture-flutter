@@ -2,6 +2,7 @@ import { lstatSync } from "fs";
 import * as _ from "lodash";
 import { Uri, OpenDialogOptions, window, InputBoxOptions, QuickPickOptions } from "vscode";
 import { DatasourceType } from "./get-datasource-type";
+import { BlocTemplateType } from "./get-bloc-type";
 
 
 export async function getTargetDirectory(uri: Uri): Promise<string> {
@@ -62,5 +63,28 @@ export async function promptForDatasourceType(): Promise<DatasourceType> {
 			return DatasourceType.SPref;
 		default:
 			return DatasourceType.API;
+	}
+}
+
+export async function promptToSelectBlocTemplateType(): Promise<BlocTemplateType | null> {
+	const useStateManagementPromptValues: string[] = ["bloc (advanced)", "cubit"];
+	const useStateMamagementPromptOptions: QuickPickOptions = {
+		placeHolder:
+			"Do you want to use bloc or cubit for State management?",
+		canPickMany: false,
+	};
+
+	const answer = await window.showQuickPick(
+		useStateManagementPromptValues,
+		useStateMamagementPromptOptions
+	);
+
+	if (answer === "bloc (advanced)") {
+		return BlocTemplateType.Bloc;
+	}
+	else if (answer === "cubit") {
+		return BlocTemplateType.Cubit;
+	} else {
+		return null;
 	}
 }
