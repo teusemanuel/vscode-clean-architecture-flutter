@@ -1,27 +1,27 @@
 import * as changeCase from "change-case";
+import { workspace } from "vscode";
 
-export function getDatasourceLocalTemplate(pageName: string, domainDirectoryPath: string, useInjectable: boolean, dioInjectionName: string): string {
-	return useInjectable
-		? getInjectableDatasource(pageName, domainDirectoryPath, dioInjectionName)
-		: getDatasource(pageName, domainDirectoryPath);
+export function getDatasourceLocalTemplate(dsName: string, domainDirectoryPath: string): string {
+  const useInjectable = workspace.getConfiguration("architecture").get<boolean>("useInjectable");
+  return useInjectable
+    ? getInjectableDatasource(dsName, domainDirectoryPath)
+    : getDatasource(dsName, domainDirectoryPath);
 }
 
-function getInjectableDatasource(pageName: string, domainDirectoryPath: string, dioInjectionName: string): string {
-	const pascalCaseDatasourceName = changeCase.pascalCase(pageName);
-	const camelCaseDatasourceName = changeCase.camelCase(pageName);
-	const snakeCaseDatasourceName = changeCase.snakeCase(pageName).toLowerCase();
-	return `import 'package:dio/dio.dart';
-import 'package:injectable/injectable.dart';
+function getInjectableDatasource(dsName: string, domainDirectoryPath: string,): string {
+  const pascalCaseDatasourceName = changeCase.pascalCase(dsName);
+  const camelCaseDatasourceName = changeCase.camelCase(dsName);
+  const snakeCaseDatasourceName = changeCase.snakeCase(dsName).toLowerCase();
+  return `import 'package:injectable/injectable.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:${domainDirectoryPath}/entities/${snakeCaseDatasourceName}.dart';
 
-part '${snakeCaseDatasourceName}_api.datasource.g.dart';
-
 @singleton
-class ${pascalCaseDatasourceName}LocalDatasource {
+class ${pascalCaseDatasourceName}SPDatasource {
   // TODO Change key name
-  static const String _${camelCaseDatasourceName} = "app_name_key_${camelCaseDatasourceName}";
+  static const String _${camelCaseDatasourceName} = "app_name_key_${snakeCaseDatasourceName}";
   final SharedPreferences _prefs;
-  ${pascalCaseDatasourceName}LocalDatasource(SharedPreferences prefs) : _prefs = prefs;
+  ${pascalCaseDatasourceName}SPDatasource(this._prefs);
 
   ${pascalCaseDatasourceName}? get ${camelCaseDatasourceName} => hasSession ? ${pascalCaseDatasourceName}.fromJson(jsonDecode(_prefs.getString(_${camelCaseDatasourceName}) ?? '')) : null;
 
@@ -34,22 +34,18 @@ class ${pascalCaseDatasourceName}LocalDatasource {
 `;
 }
 
-function getDatasource(pageName: string, domainDirectoryPath: string): string {
-	const pascalCaseDatasourceName = changeCase.pascalCase(pageName);
-	const camelCaseDatasourceName = changeCase.camelCase(pageName);
-	const snakeCaseDatasourceName = changeCase.snakeCase(pageName).toLowerCase();
-	return `import 'package:dio/dio.dart';
-import 'package:injectable/injectable.dart';
+function getDatasource(dsName: string, domainDirectoryPath: string): string {
+  const pascalCaseDatasourceName = changeCase.pascalCase(dsName);
+  const camelCaseDatasourceName = changeCase.camelCase(dsName);
+  const snakeCaseDatasourceName = changeCase.snakeCase(dsName).toLowerCase();
+  return `import 'package:shared_preferences/shared_preferences.dart';
 import 'package:${domainDirectoryPath}/entities/${snakeCaseDatasourceName}.dart';
 
-part '${snakeCaseDatasourceName}_api.datasource.g.dart';
-
-@singleton
-class ${pascalCaseDatasourceName}LocalDatasource {
+class ${pascalCaseDatasourceName}SPDatasource {
   // TODO Change key name
-  static const String _${camelCaseDatasourceName} = "app_name_key_${camelCaseDatasourceName}";
+  static const String _${camelCaseDatasourceName} = "app_name_key_${snakeCaseDatasourceName}";
   final SharedPreferences _prefs;
-  ${pascalCaseDatasourceName}LocalDatasource(SharedPreferences prefs) : _prefs = prefs;
+  ${pascalCaseDatasourceName}SPDatasource(this._prefs);
 
   ${pascalCaseDatasourceName}? get ${camelCaseDatasourceName} => hasSession ? ${pascalCaseDatasourceName}.fromJson(jsonDecode(_prefs.getString(_${camelCaseDatasourceName}) ?? '')) : null;
 

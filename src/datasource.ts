@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+/* import * as _ from "lodash";
 import * as changeCase from "change-case";
 import * as mkdirp from "mkdirp";
 import * as path from "path";
@@ -93,27 +93,27 @@ export class Datasource extends Generator {
 }
 
 function promptForDioInjectionName(): Thenable<string | undefined> {
-	const blocNamePromptOptions: InputBoxOptions = {
-		prompt: "Dio Injection Name",
-		placeHolder: "default (clientDio)",
-	};
-	return window.showInputBox(blocNamePromptOptions);
+    const blocNamePromptOptions: InputBoxOptions = {
+        prompt: "Dio Injection Name",
+        placeHolder: "default (clientDio)",
+    };
+    return window.showInputBox(blocNamePromptOptions);
 }
 
 
 
 async function promptForDSType(): Promise<'api' | 'db' | 'local'> {
-	const useInjectablePromptValues: string[] = ["api (default)", "db", "local"];
-	const useInjectablePromptOptions: QuickPickOptions = {
-		placeHolder:
-			"What Datasource type you whant to use?",
-		canPickMany: false,
-	};
+    const useInjectablePromptValues: string[] = ["api (default)", "db", "local"];
+    const useInjectablePromptOptions: QuickPickOptions = {
+        placeHolder:
+            "What Datasource type you whant to use?",
+        canPickMany: false,
+    };
 
-	const answer = await window.showQuickPick(
-		useInjectablePromptValues,
-		useInjectablePromptOptions
-	);
+    const answer = await window.showQuickPick(
+        useInjectablePromptValues,
+        useInjectablePromptOptions
+    );
 
     switch (answer) {
         case 'db':
@@ -123,4 +123,4 @@ async function promptForDSType(): Promise<'api' | 'db' | 'local'> {
         default:
             return 'api';
     }
-}
+} */

@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+/* import * as _ from "lodash";
 import * as changeCase from "change-case";
 import * as mkdirp from "mkdirp";
 import * as path from "path";
@@ -12,13 +12,13 @@ import { createDirectories, createDirectory } from "./utils/directory";
 import { getPageTemplate } from "./templates/application/pages.template";
 
 import {
-	commands,
-	ExtensionContext,
-	InputBoxOptions,
-	OpenDialogOptions,
-	QuickPickOptions,
-	Uri,
-	window,
+    commands,
+    ExtensionContext,
+    InputBoxOptions,
+    OpenDialogOptions,
+    QuickPickOptions,
+    Uri,
+    window,
 } from "vscode";
 
 export class ApplicationCubit extends Generator {
@@ -26,7 +26,7 @@ export class ApplicationCubit extends Generator {
         const featureNamePath = changeCase.snakeCase(featureName).toLowerCase()
         // Create the application layer
         let applicationDirectoryPath = '';
-        if(targetDirectory.includes('lib/application')) {
+        if (targetDirectory.includes('lib/application')) {
             applicationDirectoryPath = targetDirectory;
         } else {
             applicationDirectoryPath = path.join(
@@ -41,12 +41,12 @@ export class ApplicationCubit extends Generator {
         // Check if it's a subfolder
         const isSubFolder = await promptIsSubFolder();
         let subFolder: string | undefined = '';
-        if(isSubFolder) {
+        if (isSubFolder) {
             subFolder = await selectSubFolder(Uri.parse(applicationDirectoryPath));
-            if(!subFolder) {
+            if (!subFolder) {
                 throw Error(`SubFolder not selected`);
             }
-            if(!subFolder.includes(targetDirectory)) {
+            if (!subFolder.includes(targetDirectory)) {
                 throw Error(`SubFolder not parent of [${targetDirectory}] directory`);
             }
             const subfolders = subFolder.replace(applicationDirectoryPath, '').split('/').filter(value => value.trim()!);
@@ -106,15 +106,15 @@ export class ApplicationCubit extends Generator {
         switch (type) {
             case "state":
                 path = `${featureDirectoryPath}/cubit/${snakeCaseFileName}_state.dart`;
-                data = getCubitStateTemplate(fileName, true);
+                // data = getCubitStateTemplate(fileName, true);
                 break;
             case "cubit":
                 path = `${featureDirectoryPath}/cubit/${snakeCaseFileName}_cubit.dart`;
-                data = getCubitTemplate(fileName, useInjectable);
+                // data = getCubitTemplate(fileName, useInjectable);
                 break;
             case "page":
                 path = `${featureDirectoryPath}/pages/${snakeCaseFileName}.page.dart`;
-                data = getPageTemplate(fileName, packagePath, 'cubit', packageRoot, useInjectable);
+                // data = getPageTemplate(fileName, packagePath, 'cubit', packageRoot, useInjectable);
                 break;
 
             default:
@@ -146,23 +146,23 @@ export class ApplicationCubit extends Generator {
 }
 
 export async function promptIsSubFolder(): Promise<boolean> {
-	const values: string[] = ["yes (default)", "no"];
-	const promptOptions: QuickPickOptions = {
-		placeHolder:
-			"Should this page be in a subfolder?",
-		canPickMany: false,
-	};
+    const values: string[] = ["yes (default)", "no"];
+    const promptOptions: QuickPickOptions = {
+        placeHolder:
+            "Should this page be in a subfolder?",
+        canPickMany: false,
+    };
 
-	const answer = await window.showQuickPick(
-		values,
-		promptOptions
-	);
+    const answer = await window.showQuickPick(
+        values,
+        promptOptions
+    );
 
-	return answer !== "no";
+    return answer !== "no";
 }
 
 export async function selectSubFolder(defaultUri: Uri): Promise<string | undefined> {
-	const promptOptions: OpenDialogOptions = {
+    const promptOptions: OpenDialogOptions = {
         defaultUri,
         canSelectMany: false,
         openLabel: 'Select',
@@ -170,11 +170,11 @@ export async function selectSubFolder(defaultUri: Uri): Promise<string | undefin
         canSelectFolders: true
     };
 
-	const result = await window.showOpenDialog(
-		promptOptions
-	);
+    const result = await window.showOpenDialog(
+        promptOptions
+    );
 
     if (result && result[0]) {
         return result[0].fsPath;
     }
-}
+} */

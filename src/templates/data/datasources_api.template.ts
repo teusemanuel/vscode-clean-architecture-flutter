@@ -1,15 +1,17 @@
 import * as changeCase from "change-case";
+import { workspace } from "vscode";
 
-export function getDatasourceAPITemplate(pageName: string, domainDirectoryPath: string, useInjectable: boolean, dioInjectionName: string): string {
+export function getDatasourceAPITemplate(dsName: string, domainDirectoryPath: string): string {
+	const useInjectable = workspace.getConfiguration("architecture").get<boolean>("useInjectable");
 	return useInjectable
-		? getInjectableDatasource(pageName, domainDirectoryPath, dioInjectionName)
-		: getDatasource(pageName, domainDirectoryPath);
+		? getInjectableDatasource(dsName, domainDirectoryPath)
+		: getDatasource(dsName, domainDirectoryPath);
 }
 
-function getInjectableDatasource(pageName: string, domainDirectoryPath: string, dioInjectionName: string): string {
-	const pascalCasePageName = changeCase.pascalCase(pageName);
-	const snakeCasePageName = changeCase.snakeCase(pageName).toLowerCase();
-	const pathCasePageName = changeCase.paramCase(pageName).toLowerCase();
+function getInjectableDatasource(dsName: string, domainDirectoryPath: string): string {
+	const pascalCasePageName = changeCase.pascalCase(dsName);
+	const snakeCasePageName = changeCase.snakeCase(dsName).toLowerCase();
+	const pathCasePageName = changeCase.paramCase(dsName).toLowerCase();
 	return `import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:${domainDirectoryPath}/entities/${snakeCasePageName}.dart';
@@ -21,7 +23,7 @@ part '${snakeCasePageName}_api.datasource.g.dart';
 @injectable
 abstract class ${pascalCasePageName}ApiDatasource {
   @factoryMethod
-  factory ${pascalCasePageName}ApiDatasource(@Named('${dioInjectionName}') Dio dio, {@factoryParam String? baseUrl}) = _${pascalCasePageName}ApiDatasource;
+  factory ${pascalCasePageName}ApiDatasource(Dio dio, {@factoryParam String? baseUrl}) = _${pascalCasePageName}ApiDatasource;
 
   @GET('${pathCasePageName}')
   Future<${pascalCasePageName}> get();
@@ -29,10 +31,10 @@ abstract class ${pascalCasePageName}ApiDatasource {
 `;
 }
 
-function getDatasource(pageName: string, domainDirectoryPath: string): string {
-	const pascalCasePageName = changeCase.pascalCase(pageName);
-	const snakeCasePageName = changeCase.snakeCase(pageName).toLowerCase();
-	const pathCasePageName = changeCase.paramCase(pageName).toLowerCase();
+function getDatasource(dsName: string, domainDirectoryPath: string): string {
+	const pascalCasePageName = changeCase.pascalCase(dsName);
+	const snakeCasePageName = changeCase.snakeCase(dsName).toLowerCase();
+	const pathCasePageName = changeCase.paramCase(dsName).toLowerCase();
 	return `import 'package:dio/dio.dart';
 import 'package:${domainDirectoryPath}/entities/${snakeCasePageName}.dart';
 import 'package:retrofit/retrofit.dart';

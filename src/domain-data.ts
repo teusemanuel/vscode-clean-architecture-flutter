@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+/* import * as _ from "lodash";
 import * as changeCase from "change-case";
 import * as mkdirp from "mkdirp";
 import * as path from "path";
@@ -114,4 +114,4 @@ export class DomainData extends Generator {
             );
         });
     }
-}
+} */

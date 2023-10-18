@@ -1,12 +1,14 @@
 import * as changeCase from "change-case";
+import { workspace } from "vscode";
 
-export function getRepositoryTemplate(pageName: string, domainDirectoryPath: string, dataDirectoryPath: string, useInjectable: boolean): string {
+export function getDataRepositoryTemplate(pageName: string, domainDirectoryPath: string): string {
+  const useInjectable = workspace.getConfiguration("architecture").get<boolean>("useInjectable");
   return useInjectable
-    ? getRepositoryInjectable(pageName, domainDirectoryPath, dataDirectoryPath)
-    : getRepository(pageName, domainDirectoryPath, dataDirectoryPath);
+    ? getRepositoryInjectable(pageName, domainDirectoryPath)
+    : getRepository(pageName, domainDirectoryPath);
 }
 
-function getRepositoryInjectable(pageName: string, domainDirectoryPath: string, dataDirectoryPath: string): string {
+function getRepositoryInjectable(pageName: string, domainDirectoryPath: string): string {
   const pascalCaseRepositoryName = changeCase.pascalCase(pageName);
   const camelCaseRepositoryName = changeCase.camelCase(pageName);
   const snakeCaseRepositoryName = changeCase.snakeCase(pageName).toLowerCase();
@@ -18,7 +20,7 @@ import 'package:${domainDirectoryPath}/repositories/${snakeCaseRepositoryName}.r
 class ${pascalCaseRepositoryName}Repository implements I${pascalCaseRepositoryName}Repository {
   // Inject datasource
   // final ${pascalCaseRepositoryName}ApiDatasource _${camelCaseRepositoryName}API;
-  // ${pascalCaseRepositoryName}Repository(${pascalCaseRepositoryName}ApiDatasource ${camelCaseRepositoryName}API) : _${camelCaseRepositoryName}API = ${camelCaseRepositoryName}API;
+  // ${pascalCaseRepositoryName}Repository(_${camelCaseRepositoryName}API);
     
   @override
   Future<bool> update${pascalCaseRepositoryName}(${pascalCaseRepositoryName} value) async {
@@ -41,7 +43,7 @@ class ${pascalCaseRepositoryName}Repository implements I${pascalCaseRepositoryNa
 `;
 }
 
-function getRepository(pageName: string, domainDirectoryPath: string, dataDirectoryPath: string): string {
+function getRepository(pageName: string, domainDirectoryPath: string): string {
   const pascalCaseRepositoryName = changeCase.pascalCase(pageName);
   const snakeCaseRepositoryName = changeCase.snakeCase(pageName).toLowerCase();
   return `import 'package:${domainDirectoryPath}/entities/${snakeCaseRepositoryName}.dart';

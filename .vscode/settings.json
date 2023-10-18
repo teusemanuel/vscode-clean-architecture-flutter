@@ -21,5 +21,7 @@
         "sash.hoverBorder": "#723976",
         "sideBar.border": "#723976"
     },
-    "peacock.color": "#723976"
+    "peacock.color": "#723976",
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true
 }
