@@ -45,15 +45,17 @@
 					},
 					"architecture.localdb.type": {
 						"type": "string",
-						"default": "sqflite",
+						"default": "auto",
 						"description": "Type of injection used in Database local datasource.",
 						"enum": [
+							"auto",
 							"sqflite",
 							"floor",
 							"hive",
 							"objectbox"
 						],
 						"enumDescriptions": [
+							"automatically pick template based on dependencies",
 							"SQLite plugin for Flutter. Supports iOS, Android and MacOS (SQLite)",
 							"Provides a neat SQLite abstraction for your Flutter applications inspired by the Room persistence library (SQLite)",
 							"Lightweight and blazing fast key-value database written in pure Dart (NoSQL database)",

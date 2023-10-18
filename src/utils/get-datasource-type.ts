@@ -4,7 +4,6 @@ import { hasDependency } from "./has-dependency";
 const sqflite = "sqflite";
 const floor = "floor";
 const hive = "hive";
-const hive_flutter = "hive_flutter";
 const objectbox = "objectbox";
 
 /**
@@ -41,7 +40,7 @@ export const enum TemplateSettingDB {
   Auto = 'Auto',
 }
 
-export async function getDatasourceType(): Promise<DatasourceTypeDB> {
+export async function getDatasourceDBType(): Promise<DatasourceTypeDB> {
   const setting = getTemplateSetting();
   switch (setting) {
     case TemplateSettingDB.Sqflite:
@@ -63,7 +62,7 @@ async function getDefaultDependency(): Promise<DatasourceTypeDB> {
     return DatasourceTypeDB.Sqflite;
   } else if (await hasDependency(floor)) {
     return DatasourceTypeDB.Floor;
-  } else if (await hasDependency(hive) && await hasDependency(hive_flutter)) {
+  } else if (await hasDependency(hive)) {
     return DatasourceTypeDB.Hive;
   } else if (await hasDependency(objectbox)) {
     return DatasourceTypeDB.Objectbox;

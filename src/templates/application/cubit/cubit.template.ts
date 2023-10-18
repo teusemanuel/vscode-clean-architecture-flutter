@@ -28,8 +28,8 @@ part '${snakeCaseCubitName}_state.dart';
 @injectable
 class ${pascalCaseCubitName}Cubit extends Cubit<${cubitState}> {
   // Inject repository
-  // final I${pascalCaseCubitName}Repository ${camelCaseCubitName}Repository;
-  ${pascalCaseCubitName}Cubit(/* this.${camelCaseCubitName}Repository */) : super(${pascalCaseCubitName}Initial());
+  // final I${pascalCaseCubitName}Repository _${camelCaseCubitName}Repository;
+  ${pascalCaseCubitName}Cubit(/* this._${camelCaseCubitName}Repository */) : super(${pascalCaseCubitName}Initial());
 }
 `;
 }
@@ -69,8 +69,8 @@ part '${snakeCaseCubitName}_state.dart';
 @injectable
 class ${pascalCaseCubitName}Cubit extends Cubit<${cubitState}> {
   // Inject repository
-  // final I${pascalCaseCubitName}Repository ${camelCaseCubitName}Repository;
-  ${pascalCaseCubitName}Cubit(/* this.${camelCaseCubitName}Repository */) : super(${pascalCaseCubitName}Initial());
+  // final I${pascalCaseCubitName}Repository _${camelCaseCubitName}Repository;
+  ${pascalCaseCubitName}Cubit(/* this._${camelCaseCubitName}Repository */) : super(${pascalCaseCubitName}Initial());
 }
 `;
 }
@@ -111,8 +111,8 @@ part '${snakeCaseCubitName}_cubit.freezed.dart';
 @injectable
 class ${pascalCaseCubitName}Cubit extends Cubit<${cubitState}> {
   // Inject repository
-  // final I${pascalCaseCubitName}Repository ${camelCaseCubitName}Repository;
-  ${pascalCaseCubitName}Cubit(/* this.${camelCaseCubitName}Repository */) : super(${pascalCaseCubitName}State.initial());
+  // final I${pascalCaseCubitName}Repository _${camelCaseCubitName}Repository;
+  ${pascalCaseCubitName}Cubit(/* this._${camelCaseCubitName}Repository */) : super(${pascalCaseCubitName}State.initial());
 }
 `;
 }

@@ -2,12 +2,12 @@ import {
 	Uri,
 	window,
 } from "vscode";
-import { promptForName, promptForTargetDirectory, isNameValid, createDirectory, promptForDatasourceType } from "../utils";
+import { promptForName, promptForTargetDirectory, isNameValid, createDirectory, promptForDatasourceType, getPackageName } from "../utils";
 import * as _ from "lodash";
 import * as changeCase from "change-case";
 import { existsSync, lstatSync, writeFile } from "fs";
 import * as path from "path";
-import { DatasourceType } from "../utils/get-datasource-type";
+import { DatasourceType, getDatasourceDBType } from "../utils/get-datasource-type";
 import { getDatasourceAPITemplate, getDatasourceDBTemplate, getDatasourceLocalTemplate } from "../templates";
 
 /**
@@ -52,6 +52,15 @@ export const newDatasource = async (uri: Uri) => {
 		}
 	}
 
+	/**
+	 * Add Aplication page folder name
+	 */
+	const snakeCaseDSName = changeCase.snakeCase(dsName!);
+	dsDir = path.join(dsDir, snakeCaseDSName);
+	if (!existsSync(dsDir!)) {
+		await createDirectory(dsDir);
+	}
+
 	const pascalCaseDatasourceName = changeCase.pascalCase(dsName!);
 
 	try {
@@ -69,29 +78,31 @@ export const newDatasource = async (uri: Uri) => {
 
 async function generateDatasourceCode(
 	dsName: string,
-	applicationDir: string
+	dsDir: string
 ) {
 
 	const dsType = await promptForDatasourceType();
-	if (!existsSync(`${applicationDir}/datasources`)) {
-		await createDirectory(`${applicationDir}/datasources`);
+	if (!existsSync(`${dsDir}/datasources`)) {
+		await createDirectory(`${dsDir}/datasources`);
 	}
 	switch (dsType) {
-		case DatasourceType.SPref:
-			return await createDBDatasource(dsName, `${applicationDir}/datasources`);
 		case DatasourceType.DB:
-			return await createSPrefDatasource(dsName, `${applicationDir}/datasources`);
+			return await createDBDatasource(dsName, `${dsDir}/datasources`);
+		case DatasourceType.SPref:
+			return await createSPrefDatasource(dsName, `${dsDir}/datasources`);
 		case DatasourceType.API:
 		default:
-			return await createAPIDatasource(dsName, `${applicationDir}/datasources`);
+			return await createAPIDatasource(dsName, `${dsDir}/datasources`);
 	}
 }
 
-function createDBDatasource(
+async function createDBDatasource(
 	dsName: string,
 	targetDirectory: string
 ) {
 	const snakeCaseDsName = changeCase.snakeCase(dsName);
+	const domainDir = path.join(await getPackageName(), "domain", snakeCaseDsName);
+	const dbType = await getDatasourceDBType();
 	const targetPath = `${targetDirectory}/${snakeCaseDsName}_db.datasource.dart`;
 	if (existsSync(targetPath)) {
 		throw Error(`${snakeCaseDsName}_db.datasource.dart already exists`);
@@ -99,7 +110,7 @@ function createDBDatasource(
 	return new Promise<void>(async (resolve, reject) => {
 		writeFile(
 			targetPath,
-			getDatasourceDBTemplate(dsName, targetDirectory),
+			getDatasourceDBTemplate(dsName, domainDir, dbType),
 			"utf8",
 			(error) => {
 				if (error) {
@@ -112,11 +123,12 @@ function createDBDatasource(
 	});
 }
 
-function createAPIDatasource(
+async function createAPIDatasource(
 	dsName: string,
 	targetDirectory: string
 ) {
 	const snakeCaseDsName = changeCase.snakeCase(dsName);
+	const domainDir = path.join(await getPackageName(), "domain", snakeCaseDsName);
 	const targetPath = `${targetDirectory}/${snakeCaseDsName}_api.datasource.dart`;
 	if (existsSync(targetPath)) {
 		throw Error(`${snakeCaseDsName}_api.datasource.dart already exists`);
@@ -124,7 +136,7 @@ function createAPIDatasource(
 	return new Promise<void>(async (resolve, reject) => {
 		writeFile(
 			targetPath,
-			getDatasourceAPITemplate(dsName, targetDirectory),
+			getDatasourceAPITemplate(dsName, domainDir),
 			"utf8",
 			(error) => {
 				if (error) {
@@ -137,11 +149,12 @@ function createAPIDatasource(
 	});
 }
 
-function createSPrefDatasource(
+async function createSPrefDatasource(
 	dsName: string,
 	targetDirectory: string
 ) {
 	const snakeCaseDsName = changeCase.snakeCase(dsName);
+	const domainDir = path.join(await getPackageName(), "domain", snakeCaseDsName);
 	const targetPath = `${targetDirectory}/${snakeCaseDsName}_sp.datasource.dart`;
 	if (existsSync(targetPath)) {
 		throw Error(`${snakeCaseDsName}_sp.datasource.dart already exists`);
@@ -149,7 +162,7 @@ function createSPrefDatasource(
 	return new Promise<void>(async (resolve, reject) => {
 		writeFile(
 			targetPath,
-			getDatasourceLocalTemplate(dsName, targetDirectory),
+			getDatasourceLocalTemplate(dsName, domainDir),
 			"utf8",
 			(error) => {
 				if (error) {
