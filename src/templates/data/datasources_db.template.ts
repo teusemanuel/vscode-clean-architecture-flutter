@@ -3,31 +3,31 @@ import { workspace } from "vscode";
 import { DatasourceTypeDB } from "../../utils/get-datasource-type";
 
 export function getDatasourceDBTemplate(pageName: string, domainDirectoryPath: string, dbType: DatasourceTypeDB): string {
-	const useInjectable = workspace.getConfiguration("architecture").get<boolean>("useInjectable");
-	switch (dbType) {
-		case DatasourceTypeDB.Sqflite:
-			return getSqfliteDatasource(pageName, domainDirectoryPath, useInjectable);
-		case DatasourceTypeDB.Floor:
-			return getFloorDatasource(pageName, domainDirectoryPath);
-		case DatasourceTypeDB.Hive:
-			return getHiveDatasource(pageName, domainDirectoryPath, useInjectable);
-		case DatasourceTypeDB.Objectbox:
-			return getObjectboxDatasource(pageName, domainDirectoryPath, useInjectable);
-		case DatasourceTypeDB.None:
-		default:
-			return getDefaultDatasource(pageName, domainDirectoryPath, useInjectable);
-	}
+  const useInjectable = workspace.getConfiguration("architecture").get<boolean>("useInjectable");
+  switch (dbType) {
+    case DatasourceTypeDB.Sqflite:
+      return getSqfliteDatasource(pageName, domainDirectoryPath, useInjectable);
+    case DatasourceTypeDB.Floor:
+      return getFloorDatasource(pageName, domainDirectoryPath);
+    case DatasourceTypeDB.Hive:
+      return getHiveDatasource(pageName, domainDirectoryPath, useInjectable);
+    case DatasourceTypeDB.Objectbox:
+      return getObjectboxDatasource(pageName, domainDirectoryPath, useInjectable);
+    case DatasourceTypeDB.None:
+    default:
+      return getDefaultDatasource(pageName, domainDirectoryPath, useInjectable);
+  }
 }
 
 function getSqfliteDatasource(
-	dsName: string,
-	domainDirectoryPath: string,
-	useInjectable: boolean | undefined,
+  dsName: string,
+  domainDirectoryPath: string,
+  useInjectable: boolean | undefined,
 ): string {
-	const pascalCaseDatasourceName = changeCase.pascalCase(dsName);
-	const camelCaseDatasourceName = changeCase.camelCase(dsName);
-	const snakeCaseDatasourceName = changeCase.snakeCase(dsName).toLowerCase();
-	return `${useInjectable ? "import 'package:injectable/injectable.dart';" : ""}
+  const pascalCaseDatasourceName = changeCase.pascalCase(dsName);
+  const camelCaseDatasourceName = changeCase.camelCase(dsName);
+  const snakeCaseDatasourceName = changeCase.snakeCase(dsName).toLowerCase();
+  return `${useInjectable ? "import 'package:injectable/injectable.dart';" : ""}
 import 'package:sqflite/sqflite.dart';
 import 'package:${domainDirectoryPath}/entities/${snakeCaseDatasourceName}.dart';
 
@@ -48,13 +48,13 @@ class ${pascalCaseDatasourceName}DBDatasource {
     return result.isEmpty ? null : ${pascalCaseDatasourceName}.fromJson(result.first);
   }
 
-  Future<${pascalCaseDatasourceName}> save(${pascalCaseDatasourceName} ${camelCaseDatasourceName}) async {
+  Future<${pascalCaseDatasourceName}?> save(${pascalCaseDatasourceName} ${camelCaseDatasourceName}) async {
     final id = await _db.insert(_table, ${camelCaseDatasourceName}.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
     return id > 0 ? ${camelCaseDatasourceName}.copyWith(id: id) : null;
   }
 
-  Future<bool> update(int id, ${pascalCaseDatasourceName}? value) async {
-    final result = await _db.update(_table, ${camelCaseDatasourceName}.toJson(), where: "id = ?", whereArgs: [id]);
+  Future<bool> update(int id, ${pascalCaseDatasourceName}? ${camelCaseDatasourceName}) async {
+    final result = await _db.update(_table, ${camelCaseDatasourceName}?.toJson() ?? {}, where: "id = ?", whereArgs: [id]);
     return result > 0;
   }
 
@@ -72,13 +72,13 @@ class ${pascalCaseDatasourceName}DBDatasource {
 }
 
 function getFloorDatasource(
-	dsName: string,
-	domainDirectoryPath: string,
+  dsName: string,
+  domainDirectoryPath: string,
 ): string {
-	const pascalCaseDatasourceName = changeCase.pascalCase(dsName);
-	const camelCaseDatasourceName = changeCase.camelCase(dsName);
-	const snakeCaseDatasourceName = changeCase.snakeCase(dsName).toLowerCase();
-	return `import 'package:floor/floor.dart';
+  const pascalCaseDatasourceName = changeCase.pascalCase(dsName);
+  const camelCaseDatasourceName = changeCase.camelCase(dsName);
+  const snakeCaseDatasourceName = changeCase.snakeCase(dsName).toLowerCase();
+  return `import 'package:floor/floor.dart';
 import 'package:${domainDirectoryPath}/entities/${snakeCaseDatasourceName}.dart';
 
 @dao
@@ -108,14 +108,14 @@ abstract class ${pascalCaseDatasourceName}DBDatasource {
 }
 
 function getHiveDatasource(
-	dsName: string,
-	domainDirectoryPath: string,
-	useInjectable: boolean | undefined,
+  dsName: string,
+  domainDirectoryPath: string,
+  useInjectable: boolean | undefined,
 ): string {
-	const pascalCaseDatasourceName = changeCase.pascalCase(dsName);
-	const camelCaseDatasourceName = changeCase.camelCase(dsName);
-	const snakeCaseDatasourceName = changeCase.snakeCase(dsName).toLowerCase();
-	return `${useInjectable ? "import 'package:injectable/injectable.dart';" : ""}
+  const pascalCaseDatasourceName = changeCase.pascalCase(dsName);
+  const camelCaseDatasourceName = changeCase.camelCase(dsName);
+  const snakeCaseDatasourceName = changeCase.snakeCase(dsName).toLowerCase();
+  return `${useInjectable ? "import 'package:injectable/injectable.dart';" : ""}
 import 'package:hive/hive.dart';
 import 'package:${domainDirectoryPath}/entities/${snakeCaseDatasourceName}.dart';
 
@@ -146,14 +146,14 @@ class ${pascalCaseDatasourceName}DBDatasource {
 }
 
 function getObjectboxDatasource(
-	dsName: string,
-	domainDirectoryPath: string,
-	useInjectable: boolean | undefined,
+  dsName: string,
+  domainDirectoryPath: string,
+  useInjectable: boolean | undefined,
 ): string {
-	const pascalCaseDatasourceName = changeCase.pascalCase(dsName);
-	const camelCaseDatasourceName = changeCase.camelCase(dsName);
-	const snakeCaseDatasourceName = changeCase.snakeCase(dsName).toLowerCase();
-	return `${useInjectable ? "import 'package:injectable/injectable.dart';" : ""}
+  const pascalCaseDatasourceName = changeCase.pascalCase(dsName);
+  const camelCaseDatasourceName = changeCase.camelCase(dsName);
+  const snakeCaseDatasourceName = changeCase.snakeCase(dsName).toLowerCase();
+  return `${useInjectable ? "import 'package:injectable/injectable.dart';" : ""}
 import 'package:objectbox/objectbox.dart';
 import 'package:${domainDirectoryPath}/entities/${snakeCaseDatasourceName}.dart';
 
@@ -184,15 +184,15 @@ class ${pascalCaseDatasourceName}DBDatasource {
 }
 
 function getDefaultDatasource(
-	dsName: string,
-	domainDirectoryPath: string,
-	useInjectable: boolean | undefined,
+  dsName: string,
+  domainDirectoryPath: string,
+  useInjectable: boolean | undefined,
 ): string {
-	const pascalCaseDatasourceName = changeCase.pascalCase(dsName);
-	const camelCaseDatasourceName = changeCase.camelCase(dsName);
-	const snakeCaseDatasourceName = changeCase.snakeCase(dsName).toLowerCase();
+  const pascalCaseDatasourceName = changeCase.pascalCase(dsName);
+  const camelCaseDatasourceName = changeCase.camelCase(dsName);
+  const snakeCaseDatasourceName = changeCase.snakeCase(dsName).toLowerCase();
 
-	return `${useInjectable ? "import 'package:injectable/injectable.dart';" : ""}
+  return `${useInjectable ? "import 'package:injectable/injectable.dart';" : ""}
 import 'package:${domainDirectoryPath}/entities/${snakeCaseDatasourceName}.dart';
 
 ${useInjectable ? "@injectable" : ""}
