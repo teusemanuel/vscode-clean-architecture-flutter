@@ -16,7 +16,7 @@ async function getInjectablePage(pageName: string, packagePath: string, blocType
   const packageName = await getPackageName();
   const injectionPath = workspace.getConfiguration("architecture").get<string>("injectionFile.path") || 'core/injection/injection.dart';
   const libNormalized = path.normalize("/lib/");
-  const appPath = packagePath.substring(packagePath.lastIndexOf(libNormalized) + libNormalized.length, packagePath.lastIndexOf(path.normalize("/page")));
+  const appPath = path.posix.normalize(packagePath.substring(packagePath.lastIndexOf(libNormalized) + libNormalized.length, packagePath.lastIndexOf(path.normalize("/page"))));
   const snakeCasePageName = changeCase.snakeCase(pageName).toLowerCase();
   const hyphenCasePageName = changeCase.paramCase(pageName.toLowerCase());
 
