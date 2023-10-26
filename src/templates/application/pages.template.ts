@@ -1,4 +1,5 @@
 import * as changeCase from "change-case";
+import * as path from "path";
 import { BlocTemplateType, getPackageName } from "../../utils";
 import { workspace } from "vscode";
 
@@ -14,7 +15,8 @@ async function getInjectablePage(pageName: string, packagePath: string, blocType
   const blocTypeLower = `${blocType}`.toLowerCase();
   const packageName = await getPackageName();
   const injectionPath = workspace.getConfiguration("architecture").get<string>("injectionFile.path") || 'core/injection/injection.dart';
-  const appPath = packagePath.substring(packagePath.lastIndexOf("/lib/") + 5, packagePath.lastIndexOf("/page"));
+  const libNormalized = path.normalize("/lib/");
+  const appPath = packagePath.substring(packagePath.lastIndexOf(libNormalized) + libNormalized.length, packagePath.lastIndexOf(path.normalize("/page")));
   const snakeCasePageName = changeCase.snakeCase(pageName).toLowerCase();
   const hyphenCasePageName = changeCase.paramCase(pageName.toLowerCase());
 
@@ -42,7 +44,8 @@ class ${pascalCasePageName}Page extends StatelessWidget {
 
 async function getDefaultPage(pageName: string, packagePath: string, blocType: BlocTemplateType): Promise<string> {
   const pascalCasePageName = changeCase.pascalCase(pageName);
-  const appPath = packagePath.substring(packagePath.lastIndexOf("/lib") + 5, packagePath.lastIndexOf("/page"));
+  const libNormalized = path.normalize("/lib/");
+  const appPath = packagePath.substring(packagePath.lastIndexOf(libNormalized) + libNormalized.length, packagePath.lastIndexOf(path.normalize("/page")));
   const packageName = await getPackageName();
   const snakeCasePageName = changeCase.snakeCase(pageName).toLowerCase();
   const hyphenCasePageName = changeCase.paramCase(pageName.toLowerCase());

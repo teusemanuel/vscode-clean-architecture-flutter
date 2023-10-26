@@ -50,9 +50,9 @@ export const newDomainData = async (uri: Uri, domainDataName?: string) => {
 	 */
 	let dataDir = targetDir;
 	for (const folder of ['data', changeCase.snakeCase(domainDataName!)]) {
-		dataDir = path.join(dataDir, folder);
-		if (!existsSync(dataDir)) {
-			await createDirectory(dataDir);
+		dataDir = `${dataDir}/${folder}`;
+		if (!existsSync(path.normalize(dataDir))) {
+			await createDirectory(path.normalize(dataDir));
 		}
 	}
 	/**
@@ -60,9 +60,9 @@ export const newDomainData = async (uri: Uri, domainDataName?: string) => {
 	 */
 	let domainDir = targetDir;
 	for (const folder of ['domain', changeCase.snakeCase(domainDataName!)]) {
-		domainDir = path.join(domainDir, folder);
-		if (!existsSync(domainDir)) {
-			await createDirectory(domainDir);
+		domainDir = `${domainDir}/${folder}`;
+		if (!existsSync(path.normalize(domainDir))) {
+			await createDirectory(path.normalize(domainDir));
 		}
 	}
 
@@ -89,8 +89,8 @@ async function generateDomainDataCode(
 ) {
 
 	for (const folder of ['datasources', 'models', 'repositories']) {
-		if (!existsSync(`${dataDir}/${folder}`)) {
-			await createDirectory(`${dataDir}/${folder}`);
+		if (!existsSync(path.join(dataDir, folder))) {
+			await createDirectory(path.join(dataDir, folder));
 		}
 	}
 
@@ -101,9 +101,9 @@ async function generateDomainDataCode(
 	}
 
 	await Promise.all([
-		createDomainRepositoryTemplate(ddName, path.join(domainDir, 'repositories')),
-		createDomainEntityTemplate(ddName, path.join(domainDir, 'entities')),
-		createDataRepositoryTemplate(ddName, path.join(dataDir, 'repositories')),
+		createDomainRepositoryTemplate(ddName, `${domainDir}/repositories`),
+		createDomainEntityTemplate(ddName, `${domainDir}/entities`),
+		createDataRepositoryTemplate(ddName, `${dataDir}/repositories`),
 	]);
 }
 
@@ -112,7 +112,7 @@ async function createDomainRepositoryTemplate(
 	targetDirectory: string,
 ): Promise<void> {
 	const snakeCaseBlocName = changeCase.snakeCase(domainName);
-	const domainDir = path.join(await getPackageName(), "domain", domainName);
+	const domainDir = `${await getPackageName()}/domain/${domainName}`;
 	const targetPath = path.join(targetDirectory, `${snakeCaseBlocName}.repository.i.dart`);
 	if (existsSync(targetPath)) {
 		throw Error(`${snakeCaseBlocName}.repository.i.dart already exists`);
@@ -154,10 +154,10 @@ async function createDataRepositoryTemplate(
 	targetDirectory: string,
 ): Promise<void> {
 	const snakeCaseBlocName = changeCase.snakeCase(dataName);
-	const domainDir = path.join(await getPackageName(), "domain", dataName);
-	const targetPath = path.join(targetDirectory, `${snakeCaseBlocName}.dart`);
+	const domainDir = `${await getPackageName()}/domain/${dataName}`;
+	const targetPath = path.join(targetDirectory, `${snakeCaseBlocName}.repository.dart`);
 	if (existsSync(targetPath)) {
-		throw Error(`${snakeCaseBlocName}.dart already exists`);
+		throw Error(`${snakeCaseBlocName}.repository.dart already exists`);
 	}
 	return new Promise<void>(async (resolve, reject) => {
 		writeFile(targetPath, getDataRepositoryTemplate(dataName, domainDir), "utf8", (error) => {

@@ -99,7 +99,7 @@ async function createDBDatasourceTemplate(
 	targetDirectory: string
 ) {
 	const snakeCaseDsName = changeCase.snakeCase(dsName);
-	const domainDir = path.join(await getPackageName(), "domain", snakeCaseDsName);
+	const domainDir = `${await getPackageName()}/domain/${snakeCaseDsName}`;
 	const dbType = await getDatasourceDBType();
 	const targetPath = path.join(targetDirectory, `${snakeCaseDsName}_db.datasource.dart`);
 	if (existsSync(targetPath)) {
@@ -126,7 +126,7 @@ async function createAPIDatasourceTemplate(
 	targetDirectory: string
 ) {
 	const snakeCaseDsName = changeCase.snakeCase(dsName);
-	const domainDir = path.join(await getPackageName(), "domain", snakeCaseDsName);
+	const domainDir = `${await getPackageName()}/domain/${snakeCaseDsName}`;
 	const targetPath = path.join(targetDirectory, `${snakeCaseDsName}_api.datasource.dart`);
 	if (existsSync(targetPath)) {
 		throw Error(`${snakeCaseDsName}_api.datasource.dart already exists`);
@@ -152,7 +152,7 @@ async function createSPrefDatasourceTemplate(
 	targetDirectory: string
 ) {
 	const snakeCaseDsName = changeCase.snakeCase(dsName);
-	const domainDir = path.join(await getPackageName(), "domain", snakeCaseDsName);
+	const domainDir = `${await getPackageName()}/domain/${snakeCaseDsName}`;
 	const targetPath = path.join(targetDirectory, `${snakeCaseDsName}_sp.datasource.dart`);
 	if (existsSync(targetPath)) {
 		throw Error(`${snakeCaseDsName}_sp.datasource.dart already exists`);
