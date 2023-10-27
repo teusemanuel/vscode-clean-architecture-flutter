@@ -6,8 +6,8 @@ import { workspace } from "vscode";
 export function getPageTemplate(pageName: string, packagePath: string, blocType: BlocTemplateType): Promise<string> {
   const useInjectable = workspace.getConfiguration("architecture").get<boolean>("useInjectable");
   return useInjectable
-    ? getInjectablePage(pageName, packagePath, blocType)
-    : getDefaultPage(pageName, packagePath, blocType);
+    ? getInjectablePage(pageName, path.posix.normalize(packagePath), blocType)
+    : getDefaultPage(pageName, path.posix.normalize(packagePath), blocType);
 }
 
 async function getInjectablePage(pageName: string, packagePath: string, blocType: BlocTemplateType): Promise<string> {
@@ -15,8 +15,9 @@ async function getInjectablePage(pageName: string, packagePath: string, blocType
   const blocTypeLower = `${blocType}`.toLowerCase();
   const packageName = await getPackageName();
   const injectionPath = workspace.getConfiguration("architecture").get<string>("injectionFile.path") || 'core/injection/injection.dart';
-  const libNormalized = path.normalize("/lib/");
-  const appPath = path.posix.normalize(packagePath.substring(packagePath.lastIndexOf(libNormalized) + libNormalized.length, packagePath.lastIndexOf(path.normalize("/page"))));
+  const libPath = "/lib/";
+  const pagePath = "/page";
+  const appPath = packagePath.substring(packagePath.lastIndexOf(libPath) + libPath.length, packagePath.lastIndexOf(pagePath));
   const snakeCasePageName = changeCase.snakeCase(pageName).toLowerCase();
   const hyphenCasePageName = changeCase.paramCase(pageName.toLowerCase());
 
@@ -44,8 +45,9 @@ class ${pascalCasePageName}Page extends StatelessWidget {
 
 async function getDefaultPage(pageName: string, packagePath: string, blocType: BlocTemplateType): Promise<string> {
   const pascalCasePageName = changeCase.pascalCase(pageName);
-  const libNormalized = path.normalize("/lib/");
-  const appPath = packagePath.substring(packagePath.lastIndexOf(libNormalized) + libNormalized.length, packagePath.lastIndexOf(path.normalize("/page")));
+  const libPath = "/lib/";
+  const pagePath = "/page";
+  const appPath = packagePath.substring(packagePath.lastIndexOf(libPath) + libPath.length, packagePath.lastIndexOf(pagePath));
   const packageName = await getPackageName();
   const snakeCasePageName = changeCase.snakeCase(pageName).toLowerCase();
   const hyphenCasePageName = changeCase.paramCase(pageName.toLowerCase());
