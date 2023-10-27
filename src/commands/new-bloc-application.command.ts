@@ -179,7 +179,7 @@ async function createPageTemplate(
 		throw Error(`${snakeCasePageName}.page.dart already exists`);
 	}
 	return new Promise<void>(async (resolve, reject) => {
-		writeFile(targetPath, await getPageTemplate(pageName, path.win32.normalize(targetDirectory), BlocTemplateType.Bloc), "utf8", (error) => {
+		writeFile(targetPath, await getPageTemplate(pageName, targetDirectory, BlocTemplateType.Bloc), "utf8", (error) => {
 			if (error) {
 				reject(error);
 				return;
