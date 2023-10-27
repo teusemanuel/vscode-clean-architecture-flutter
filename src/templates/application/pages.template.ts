@@ -5,9 +5,10 @@ import { workspace } from "vscode";
 
 export function getPageTemplate(pageName: string, packagePath: string, blocType: BlocTemplateType): Promise<string> {
   const useInjectable = workspace.getConfiguration("architecture").get<boolean>("useInjectable");
+  packagePath = packagePath.split(path.win32.sep).join(path.posix.sep);
   return useInjectable
-    ? getInjectablePage(pageName, path.posix.normalize(packagePath), blocType)
-    : getDefaultPage(pageName, path.posix.normalize(packagePath), blocType);
+    ? getInjectablePage(pageName, packagePath, blocType)
+    : getDefaultPage(pageName, packagePath, blocType);
 }
 
 async function getInjectablePage(pageName: string, packagePath: string, blocType: BlocTemplateType): Promise<string> {
