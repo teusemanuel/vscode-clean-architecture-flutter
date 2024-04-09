@@ -112,7 +112,7 @@ async function createDomainRepositoryTemplate(
 	targetDirectory: string,
 ): Promise<void> {
 	const snakeCaseBlocName = changeCase.snakeCase(domainName);
-	const domainDir = `${await getPackageName()}/domain/${domainName}`;
+	const domainDir = `${await getPackageName()}/domain/${snakeCaseBlocName}`;
 	const targetPath = path.join(targetDirectory, `${snakeCaseBlocName}.repository.i.dart`);
 	if (existsSync(targetPath)) {
 		throw Error(`${snakeCaseBlocName}.repository.i.dart already exists`);
@@ -154,7 +154,7 @@ async function createDataRepositoryTemplate(
 	targetDirectory: string,
 ): Promise<void> {
 	const snakeCaseBlocName = changeCase.snakeCase(dataName);
-	const domainDir = `${await getPackageName()}/domain/${dataName}`;
+	const domainDir = `${await getPackageName()}/domain/${snakeCaseBlocName}`;
 	const targetPath = path.join(targetDirectory, `${snakeCaseBlocName}.repository.dart`);
 	if (existsSync(targetPath)) {
 		throw Error(`${snakeCaseBlocName}.repository.dart already exists`);
