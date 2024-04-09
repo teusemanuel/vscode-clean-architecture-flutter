@@ -20,7 +20,7 @@ import 'package:${domainDirectoryPath}/repositories/${snakeCaseRepositoryName}.r
 class ${pascalCaseRepositoryName}Repository implements I${pascalCaseRepositoryName}Repository {
   // Inject datasource
   // final ${pascalCaseRepositoryName}ApiDatasource _${camelCaseRepositoryName}API;
-  // ${pascalCaseRepositoryName}Repository(_${camelCaseRepositoryName}API);
+  // ${pascalCaseRepositoryName}Repository(this._${camelCaseRepositoryName}API);
     
   @override
   Future<bool> update${pascalCaseRepositoryName}(${pascalCaseRepositoryName} value) async {
