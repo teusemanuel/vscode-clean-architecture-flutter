@@ -1,0 +1,176 @@
+{
+	"name": "vscode-extensio-flutter-bloc-architecture",
+	"displayName": "Clean Architecture Flutter Scaffolding",
+	"description": "Add new feature easily with well structured directories (Bloc Architecture pattern)",
+	"version": "1.1.7",
+	"publisher": "Mateus Emanuel Araujo",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/teusemanuel/vscode-clean-architecture-flutter"
+	},
+	"license": "MIT",
+	"engines": {
+		"vscode": "^1.75.0"
+	},
+	"categories": [
+		"Programming Languages"
+	],
+	"keywords": [
+		"clean-architecture",
+		"bloc-architecture",
+		"dart",
+		"flutter",
+		"bloc",
+		"state-management"
+	],
+	"icon": "assets/logo.png",
+	"activationEvents": [
+		"onCommand:extension.architecture",
+		"workspaceContains:**/pubspec.yaml"
+	],
+	"main": "./dist/extension.js",
+	"contributes": {
+		"configuration": [
+			{
+				"title": "Flutter Bloc Architecture",
+				"properties": {
+					"architecture.useInjectable": {
+						"type": "boolean",
+						"default": true,
+						"description": "If the project uses the injectable lib, the template will be created with the injectable annotation."
+					},
+					"architecture.injectionFile.path": {
+						"type": "string",
+						"default": "core/injection/injection.dart",
+						"description": "file path inside the lib folder where the `injectable` package configuration is located."
+					},
+					"architecture.localdb.type": {
+						"type": "string",
+						"default": "auto",
+						"description": "Type of injection used in Database local datasource.",
+						"enum": [
+							"auto",
+							"sqflite",
+							"floor",
+							"hive",
+							"objectbox"
+						],
+						"enumDescriptions": [
+							"automatically pick template based on dependencies",
+							"SQLite plugin for Flutter. Supports iOS, Android and MacOS (SQLite)",
+							"Provides a neat SQLite abstraction for your Flutter applications inspired by the Room persistence library (SQLite)",
+							"Lightweight and blazing fast key-value database written in pure Dart (NoSQL database)",
+							"great option for storing Dart objects in your cross-platform apps (NoSQL database)"
+						]
+					}
+				}
+			}
+		],
+		"commands": [
+			{
+				"command": "extension.architecture-bloc-application",
+				"title": "Bloc: New Application",
+				"category": "Clean Architecture",
+				"icon": "assets/logo.png"
+			},
+			{
+				"command": "extension.architecture-cubit-application",
+				"title": "Cubit: New Application",
+				"category": "Clean Architecture",
+				"icon": "assets/logo.png"
+			},
+			{
+				"command": "extension.architecture-domain-data",
+				"title": "New Domain + data",
+				"category": "Clean Architecture",
+				"icon": "assets/logo.png"
+			},
+			{
+				"command": "extension.architecture-datasource",
+				"title": "New Datasource",
+				"category": "Clean Architecture",
+				"icon": "assets/logo.png"
+			},
+			{
+				"command": "extension.architecture-all",
+				"title": "New Application + Domain + data",
+				"category": "Clean Architecture",
+				"icon": "assets/logo.png"
+			}
+		],
+		"menus": {
+			"explorer/context": [
+				{
+					"command": "extension.architecture-bloc-application",
+					"group": "blocArchitectureGroup@1",
+					"when": "explorerResourceIsFolder"
+				},
+				{
+					"command": "extension.architecture-cubit-application",
+					"group": "blocArchitectureGroup@2",
+					"when": "explorerResourceIsFolder"
+				},
+				{
+					"command": "extension.architecture-domain-data",
+					"group": "blocArchitectureGroup@3",
+					"when": "explorerResourceIsFolder"
+				},
+				{
+					"command": "extension.architecture-datasource",
+					"group": "blocArchitectureGroup@4",
+					"when": "explorerResourceIsFolder"
+				},
+				{
+					"command": "extension.architecture-all",
+					"group": "blocArchitectureGroup@5",
+					"when": "explorerResourceIsFolder"
+				}
+			]
+		}
+	},
+	"scripts": {
+		"vscode:prepublish": "yarn version-generate && yarn compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"pretest": "yarn run compile && yarn run lint",
+		"lint": "eslint src --ext ts",
+		"test": "node ./dist/test/runTest.js",
+		"version-generate": "ts-node version-auto-generate.ts"
+	},
+	"devDependencies": {
+		"@types/change-case": "^2.3.1",
+		"@types/js-yaml": "^4.0.5",
+		"@types/lodash": "^4.14.182",
+		"@types/mkdirp": "^1.0.2",
+		"@types/mocha": "^9.1.1",
+		"@types/node": "16.x",
+		"@types/semver": "^7.3.10",
+		"@types/vscode": "^1.69.0",
+		"@typescript-eslint/eslint-plugin": "^5.30.0",
+		"@typescript-eslint/parser": "^5.30.0",
+		"@vscode/test-electron": "^2.1.5",
+		"cz-conventional-changelog": "^3.3.0",
+		"eslint": "^8.20.0",
+		"fs-extra": "^10.1.0",
+		"git-describe": "^4.1.1",
+		"glob": "^13.0.0",
+		"mocha": "^10.0.0",
+		"ts-node": "^10.9.1",
+		"typescript": "^4.7.4",
+		"vsce": "^2.10.0",
+		"vscode-test": "^1.6.1"
+	},
+	"dependencies": {
+		"change-case": "^4.1.2",
+		"cz-conventional-changelog": "^3.3.0",
+		"js-yaml": "^4.1.0",
+		"lodash": "^4.17.21",
+		"mkdirp": "^1.0.4",
+		"semver": "^7.3.7"
+	},
+	"config": {
+		"commitizen": {
+			"path": "./node_modules/cz-conventional-changelog"
+		}
+	}
+}
