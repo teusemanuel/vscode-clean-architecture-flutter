@@ -1,5 +1,5 @@
 import { existsSync } from "fs";
-import * as mkdirp from "mkdirp";
+import mkdirp from "mkdirp";
 import * as path from "path";
 
 export async function createDirectories(
