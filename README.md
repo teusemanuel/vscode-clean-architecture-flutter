@@ -70,7 +70,7 @@ lib/
 
 ## Support & Feedback
 
-For issues, feature requests, or questions, please open an issue on the [Bitbucket repository](https://bitbucket.org/synvata/vscode-extension-flutter/src/master/) or contact the publisher.
+For issues, feature requests, or questions, please open an issue on the [Github repository](https://github.com/teusemanuel/vscode-clean-architecture-flutter/issues) or contact the publisher.
 
 ## License
 

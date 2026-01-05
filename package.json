@@ -3,7 +3,7 @@
 	"displayName": "Clean Architecture Flutter Scaffolding",
 	"description": "Add new feature easily with well structured directories (Bloc Architecture pattern)",
 	"version": "1.1.7",
-	"publisher": "Mateus Emanuel Araujo",
+	"publisher": "MateusAraujo",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/teusemanuel/vscode-clean-architecture-flutter"
