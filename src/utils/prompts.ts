@@ -19,7 +19,7 @@ export async function getTargetDirectory(uri: Uri): Promise<string> {
 	return targetDirectory;
 }
 
-export async function promptForTargetDirectory(openLabel: string = 'Select a folder to create the feature in'): Promise<string | undefined> {
+export async function promptForTargetDirectory(openLabel = 'Select a folder to create the feature in'): Promise<string | undefined> {
 	const options: OpenDialogOptions = {
 		canSelectMany: false,
 		openLabel: openLabel,

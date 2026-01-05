@@ -105,7 +105,7 @@ async function createDBDatasourceTemplate(
 	if (existsSync(targetPath)) {
 		throw Error(`${snakeCaseDsName}_db.datasource.dart already exists`);
 	}
-	return new Promise<void>(async (resolve, reject) => {
+	return new Promise<void>((resolve, reject) => {
 		writeFile(
 			targetPath,
 			getDatasourceDBTemplate(dsName, domainDir, dbType),
@@ -131,7 +131,7 @@ async function createAPIDatasourceTemplate(
 	if (existsSync(targetPath)) {
 		throw Error(`${snakeCaseDsName}_api.datasource.dart already exists`);
 	}
-	return new Promise<void>(async (resolve, reject) => {
+	return new Promise<void>((resolve, reject) => {
 		writeFile(
 			targetPath,
 			getDatasourceAPITemplate(dsName, domainDir),
@@ -157,7 +157,7 @@ async function createSPrefDatasourceTemplate(
 	if (existsSync(targetPath)) {
 		throw Error(`${snakeCaseDsName}_sp.datasource.dart already exists`);
 	}
-	return new Promise<void>(async (resolve, reject) => {
+	return new Promise<void>((resolve, reject) => {
 		writeFile(
 			targetPath,
 			getDatasourceLocalTemplate(dsName, domainDir),

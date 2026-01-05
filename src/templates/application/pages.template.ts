@@ -28,8 +28,8 @@ import 'package:${packageName}/${appPath}/${blocTypeLower}/${snakeCasePageName}_
 import 'package:${packageName}/${injectionPath}';
 
 class ${pascalCasePageName}Page extends StatelessWidget {
-  static const path = '/${hyphenCasePageName}';
-  const ${pascalCasePageName}Page({Key? key}) : super(key: key);
+  static const path = '${hyphenCasePageName}';
+  const ${pascalCasePageName}Page({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -57,8 +57,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:${packageName}/${appPath}/${blocType}/${snakeCasePageName}_${blocType}.dart';
 
 class ${pascalCasePageName}Page extends StatelessWidget {
-    static const path = '/${hyphenCasePageName}';
-    const ${pascalCasePageName}Page({Key? key}) : super(key: key);
+    static const path = '${hyphenCasePageName}';
+    const ${pascalCasePageName}Page({super.key});
 
     @override
     Widget build(BuildContext context) {

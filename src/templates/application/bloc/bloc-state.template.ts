@@ -59,7 +59,7 @@ function getFreezedBlocStateTemplate(blocName: string): string {
   return `part of '${snakeCaseBlocName}_bloc.dart';
 
 @freezed
-class ${pascalCaseBlocName} with _\$${pascalCaseBlocName} {
+  class ${pascalCaseBlocName} with _$${pascalCaseBlocName} {
   const factory ${pascalCaseBlocName}.initial() = _Initial;
 }
 `;

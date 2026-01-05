@@ -59,7 +59,7 @@ function getFreezedCubitStateTemplate(cubitName: string): string {
   return `part of '${snakeCaseCubitName}_cubit.dart';
 
 @freezed
-class ${pascalCaseCubitName}State with _\$${pascalCaseCubitName}State {
+  class ${pascalCaseCubitName}State with _$${pascalCaseCubitName}State {
   const factory ${pascalCaseCubitName}State.initial() = _Initial;
 }
 `;

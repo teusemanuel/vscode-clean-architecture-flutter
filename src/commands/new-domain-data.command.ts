@@ -117,7 +117,7 @@ async function createDomainRepositoryTemplate(
 	if (existsSync(targetPath)) {
 		throw Error(`${snakeCaseBlocName}.repository.i.dart already exists`);
 	}
-	return new Promise<void>(async (resolve, reject) => {
+	return new Promise<void>((resolve, reject) => {
 		writeFile(targetPath, getDomainRepositoryTemplate(domainName, domainDir), "utf8", (error) => {
 			if (error) {
 				reject(error);
@@ -138,7 +138,7 @@ async function createDomainEntityTemplate(
 	if (existsSync(targetPath)) {
 		throw Error(`${snakeCaseBlocName}.dart already exists`);
 	}
-	return new Promise<void>(async (resolve, reject) => {
+	return new Promise<void>((resolve, reject) => {
 		writeFile(targetPath, getEntityTemplate(entityName, domainType), "utf8", (error) => {
 			if (error) {
 				reject(error);
@@ -159,7 +159,7 @@ async function createDataRepositoryTemplate(
 	if (existsSync(targetPath)) {
 		throw Error(`${snakeCaseBlocName}.repository.dart already exists`);
 	}
-	return new Promise<void>(async (resolve, reject) => {
+	return new Promise<void>((resolve, reject) => {
 		writeFile(targetPath, getDataRepositoryTemplate(dataName, domainDir), "utf8", (error) => {
 			if (error) {
 				reject(error);

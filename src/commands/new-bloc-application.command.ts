@@ -106,7 +106,7 @@ async function createBlocEventTemplate(
 	if (existsSync(targetPath)) {
 		throw Error(`${snakeCaseBlocName}_event.dart already exists`);
 	}
-	return new Promise<void>(async (resolve, reject) => {
+	return new Promise<void>((resolve, reject) => {
 		writeFile(
 			targetPath,
 			getBlocEventTemplate(blocName, type),
@@ -132,7 +132,7 @@ async function createBlocStateTemplate(
 	if (existsSync(targetPath)) {
 		throw Error(`${snakeCaseBlocName}_state.dart already exists`);
 	}
-	return new Promise<void>(async (resolve, reject) => {
+	return new Promise<void>((resolve, reject) => {
 		writeFile(
 			targetPath,
 			getBlocStateTemplate(blocName, type),
@@ -158,7 +158,7 @@ async function createBlocTemplate(
 	if (existsSync(targetPath)) {
 		throw Error(`${snakeCaseBlocName}_bloc.dart already exists`);
 	}
-	return new Promise<void>(async (resolve, reject) => {
+	return new Promise<void>((resolve, reject) => {
 		writeFile(targetPath, getBlocTemplate(blocName, type), "utf8", (error) => {
 			if (error) {
 				reject(error);
@@ -178,8 +178,9 @@ async function createPageTemplate(
 	if (existsSync(targetPath)) {
 		throw Error(`${snakeCasePageName}.page.dart already exists`);
 	}
-	return new Promise<void>(async (resolve, reject) => {
-		writeFile(targetPath, await getPageTemplate(pageName, targetDirectory, BlocTemplateType.Bloc), "utf8", (error) => {
+	const template = await getPageTemplate(pageName, targetDirectory, BlocTemplateType.Bloc);
+	return new Promise<void>((resolve, reject) => {
+		writeFile(targetPath, template, "utf8", (error) => {
 			if (error) {
 				reject(error);
 				return;

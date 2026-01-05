@@ -103,7 +103,7 @@ function createCubitStateTemplate(
 	if (existsSync(targetPath)) {
 		throw Error(`${snakeCaseCubitName}_state.dart already exists`);
 	}
-	return new Promise<void>(async (resolve, reject) => {
+	return new Promise<void>((resolve, reject) => {
 		writeFile(
 			targetPath,
 			getCubitStateTemplate(cubitName, type),
@@ -129,7 +129,7 @@ function createCubitTemplate(
 	if (existsSync(targetPath)) {
 		throw Error(`${snakeCaseCubitName}_cubit.dart already exists`);
 	}
-	return new Promise<void>(async (resolve, reject) => {
+	return new Promise<void>((resolve, reject) => {
 		writeFile(
 			targetPath,
 			getCubitTemplate(cubitName, type),
@@ -154,8 +154,9 @@ async function createPageTemplate(
 	if (existsSync(targetPath)) {
 		throw Error(`${snakeCasePageName}.page.dart already exists`);
 	}
-	return new Promise<void>(async (resolve, reject) => {
-		writeFile(targetPath, await getPageTemplate(pageName, targetDirectory, BlocTemplateType.Cubit), "utf8", (error) => {
+	const template = await getPageTemplate(pageName, targetDirectory, BlocTemplateType.Cubit);
+	return new Promise<void>((resolve, reject) => {
+		writeFile(targetPath, template, "utf8", (error) => {
 			if (error) {
 				reject(error);
 				return;

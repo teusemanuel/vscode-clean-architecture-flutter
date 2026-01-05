@@ -74,7 +74,7 @@ async function getDefaultDependency(): Promise<DatasourceTypeDB> {
 
 
 function getTemplateSetting(): TemplateSettingDB {
-  let config: string | undefined = workspace.getConfiguration("architecture").get("localdb.type");
+  const config: string | undefined = workspace.getConfiguration("architecture").get("localdb.type");
 
   switch (config) {
     case "sqflite":

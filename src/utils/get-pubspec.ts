@@ -6,8 +6,10 @@ export async function getPubspec () {
   const pubspecPath = getPubspecPath();
   if (pubspecPath) {
     try {
-      let content = await workspace.fs.readFile(Uri.file(pubspecPath));
+      const content = await workspace.fs.readFile(Uri.file(pubspecPath));
       return yaml.load(content.toString());
-    } catch (_) { }
+    } catch (_) {
+      // handle error if needed
+    }
   }
 }
