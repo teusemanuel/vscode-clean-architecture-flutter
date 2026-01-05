@@ -1,10 +1,35 @@
-.vscode/**
-.vscode-test/**
-src/**
+
+# Exclude dev and build output
+node_modules
+.vscode
+.git
 .gitignore
-.yarnrc
-vsc-extension-quickstart.md
-**/tsconfig.json
-**/.eslintrc.json
-**/*.map
-**/*.ts
+yarn.lock
+package-lock.json
+dist/test
+src/**/*.test.ts
+src/**/*.spec.ts
+coverage
+.vscode-test
+vscode-extension-flutter.code-workspace
+bitbucket-pipelines.yml
+version-auto-generate.ts
+.vscodeignore
+
+# Exclude docs and design files
+assets/*.sketch
+assets/*.jpg
+assets/*.jpeg
+assets/*.png
+!assets/logo.png
+
+# Exclude markdown except main docs
+!README.md
+!CHANGELOG.md
+!LICENSE.md
+*.md
+
+# Exclude misc
+*.log
+*.tmp
+*.bak

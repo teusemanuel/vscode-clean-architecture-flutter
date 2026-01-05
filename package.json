@@ -2,7 +2,7 @@
 	"name": "vscode-extensio-flutter-bloc-architecture",
 	"displayName": "Clean Architecture Flutter Scaffolding",
 	"description": "Add new feature easily with well structured directories (Bloc Architecture pattern)",
-	"version": "1.1.7",
+	"version": "1.1.8",
 	"publisher": "MateusAraujo",
 	"repository": {
 		"type": "git",
@@ -129,7 +129,8 @@
 		}
 	},
 	"scripts": {
-		"vscode:prepublish": "yarn version-generate && yarn compile",
+		"vscode:prepublish": "yarn version-generate && yarn bundle",
+		"bundle": "esbuild src/extension.ts --bundle --platform=node --external:vscode --outfile=dist/extension.js --sourcemap",
 		"compile": "tsc -p ./",
 		"watch": "tsc -watch -p ./",
 		"pretest": "yarn run compile && yarn run lint",
@@ -150,6 +151,7 @@
 		"@typescript-eslint/parser": "^5.30.0",
 		"@vscode/test-electron": "^2.1.5",
 		"cz-conventional-changelog": "^3.3.0",
+		"esbuild": "^0.27.2",
 		"eslint": "^8.20.0",
 		"fs-extra": "^10.1.0",
 		"git-describe": "^4.1.1",
