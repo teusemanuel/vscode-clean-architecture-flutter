@@ -59,13 +59,33 @@ You can customize the extension via VS Code settings:
 
 ```
 lib/
-	feature/
+	application/
 		page/
+			{file}.page.dart
 		bloc/
+			{file}_bloc.dart
+			{file}_event.dart
+			{file}_state.dart
 		cubit/
-		data/
-		domain/
-		core/
+			{file}_cubit.dart
+			{file}_state.dart
+	core/
+	data/
+		{name}/
+			datasources/
+				{name}_api.datasource.dart
+				{name}_db.datasource.dart
+				{name}_local.datasource.dart
+			models/
+				{name}.dart
+			repositories/
+				{name}.repository.dart
+	domain/
+		{name}/
+			entities/
+				{name}.dart
+			repositories/
+				{name}.repository.i.dart
 ```
 
 ## Support & Feedback
