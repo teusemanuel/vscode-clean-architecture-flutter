@@ -22,7 +22,7 @@ function getDefaultEntityTemplate(entityName: string) {
 part '${snakeCaseEntityName}.g.dart';
 
 @JsonSerializable()
-class ${pascalCaseEntityName} {
+abstract class ${pascalCaseEntityName} {
   final int id;
   //TODO Add all atributes
 
